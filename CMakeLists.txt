@@ -33,26 +33,16 @@ project(U2HTS C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-add_library(u2hts_core_settings INTERFACE)
-target_compile_definitions(u2hts_core_settings INTERFACE
-    -DU2HTS_LOG_LEVEL=U2HTS_LOG_LEVEL_INFO
-    -DU2HTS_ENABLE_LED
-    -DU2HTS_ENABLE_PERSISTENT_CONFIG
-    -DU2HTS_ENABLE_KEY
-    -DU2HTS_CONFIG_TIMEOUT=5000
-)
-
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)
-
 set(TOUCH_CONTROLLERS
-    ${CMAKE_CURRENT_LIST_DIR}/u2hts_touch_controllers/gt9xx.c
-    ${CMAKE_CURRENT_LIST_DIR}/u2hts_touch_controllers/ft54x6.c
-    ${CMAKE_CURRENT_LIST_DIR}/u2hts_touch_controllers/rmi_common.c
-    ${CMAKE_CURRENT_LIST_DIR}/u2hts_touch_controllers/rmi_f11.c
-    ${CMAKE_CURRENT_LIST_DIR}/u2hts_touch_controllers/cst8xx.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/touch-controllers/gt9xx.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/touch-controllers/ft54x6.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/touch-controllers/rmi_common.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/touch-controllers/rmi_f11.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/touch-controllers/cst8xx.c
 )
 
 set(SOURCES 
+    ${CMAKE_CURRENT_LIST_DIR}/src/u2hts_core.c
     ${CMAKE_CURRENT_LIST_DIR}/src/u2hts_rp2.c
     ${CMAKE_CURRENT_LIST_DIR}/u2hts_main.c
 )
@@ -68,9 +58,8 @@ pico_enable_stdio_uart(U2HTS 1)
 pico_enable_stdio_usb(U2HTS 0)
 
 # Add the standard library to the build
-target_link_libraries(U2HTS PUBLIC
-    pico_stdlib
-)
+target_link_libraries(U2HTS
+    pico_stdlib)
 
 # Add the standard include files to the build
 target_include_directories(U2HTS PRIVATE
@@ -78,19 +67,23 @@ target_include_directories(U2HTS PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
+target_compile_definitions(U2HTS PRIVATE
+    -DU2HTS_LOG_LEVEL=U2HTS_LOG_LEVEL_INFO
+    -DU2HTS_ENABLE_LED
+    -DU2HTS_ENABLE_PERSISTENT_CONFIG
+    -DU2HTS_ENABLE_KEY
+)
 # print memory usage after linking
 target_link_options(U2HTS PRIVATE
     -Wl,--print-memory-usage
 )
 
 # Add any user requested libraries
-target_link_libraries(U2HTS PUBLIC
+target_link_libraries(U2HTS 
     hardware_i2c
     pico_unique_id
     tinyusb_device
     tinyusb_board
-    u2hts_core
-    u2hts_core_settings
 )
 
 target_compile_options(U2HTS PRIVATE -Wunused)

@@ -65,14 +65,14 @@ RP系列支持通过`Picotool`工具来修改触摸屏相关设置，不需要�
 | 配置 | 变量名 | 可选值 |
 | --- | --- | --- |
 | 控制器名 | `controller` | 参考`触摸控制器`一节 |
-| 总线类型 | `bus_type` | 参考[u2hts_core.h](./include/u2hts_core.h#L113), 默认为`UB_I2C` |
+| 总线类型 | `bus_type` | 参考[u2hts_core.h](./include/u2hts_core.h#L111), 默认为`UB_I2C` |
 | 反转X轴 | `x_invert` | 0/1 |
 | 反转Y轴 | `y_invert` | 0/1 |
 | 交换XY轴 | `x_y_swap` | 0/1 |
 | 轮询模式 | `polling_mode` | 0/1 |
 | I2C从机地址 | `i2c_addr` | 7位地址 |
-| 回报延时 | `report_delay` | uint32_t, 默认为0 |
-| 中断触发类型 | `irq_type` | 参考[u2hts_core.h](./include/u2hts_core.h#L106) |
+| 坐标获取延时 | `fetch_delay` | uint32_t, 默认为0 |
+| 中断标志 | `irq_flag` | (1/2/3/4, 参考`u2hts_core.h`) |
 
 如果控制器不支持自动配置，则必须配置以下参数：
 | 配置 | 变量名 | 可选值 |
@@ -81,13 +81,13 @@ RP系列支持通过`Picotool`工具来修改触摸屏相关设置，不需要�
 | X轴最大值 | `x_max` | 65535 |
 | Y轴最大值 | `y_max` | 65535 |
 
-通常控制器驱动会设置总线的默认参数，也可以将其覆盖: 
+通常总线相关的设置已经在驱动中设定好了，也可以将其覆盖: 
 | 配置 | 变量名 | 可选值 |
 | --- | --- | --- |
-| I2C速度 | `i2c_speed` | uint32_t, 置0则使用控制器默认值 |
-| SPI速度 | `spi_speed` | uint32_t, 置0则使用控制器默认值 |
-| SPI CPHA | `spi_cpha` | 0/1，置0xFF(255)则使用控制器默认值 |
-| SPI CPOL | `spi_cpol` | 0/1，置0xFF(255)则使用控制器默认值 |
+| I2C速度 | `i2c_speed` | uint32_t |
+| SPI速度 | `spi_speed` | uint32_t |
+| SPI CPHA | `spi_cpha` | 0/1 |
+| SPI CPOL | `spi_cpol` | 0/1 |
 
 示例：
 ```bash
