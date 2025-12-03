@@ -6,6 +6,7 @@
 */
 
 #include "pico/binary_info.h"
+#include "u2hts_rp2.h"
 #include "u2hts_core.h"
 
 #define U2HTS_BI_INFO_TS_CFG_TAG 0x0000
@@ -60,10 +61,10 @@ int main() {
                        spi_cpha, 0xFF));
   // IRQ flag
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       irq_flag, 0));
-  // Delay between coordinate acquisitions
+                       irq_type, 0));
+  // Report delay
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       fetch_delay, 0));
+                       report_delay, 0));
 
   // Polling mode
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
@@ -82,7 +83,7 @@ int main() {
                       .max_tps = max_tps,
                       .x_max = x_max,
                       .y_max = y_max,
-                      .irq_flag = irq_flag,
+                      .irq_type = irq_type,
                       .polling_mode = polling_mode};
   U2HTS_ERROR_CODES ret = u2hts_init(&cfg);
   if (ret)
