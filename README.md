@@ -66,14 +66,14 @@ You can config touchscreen via `picotool` without rebuild firmware on RP2 platfo
 | Config | Name | Value |
 | --- | --- | --- |
 | Controller name | `controller` | refer `Touch controllers` section |
-| Bus type | `bus_type` | refer [u2hts_core.h](./include/u2hts_core.h#L111), default `UB_I2C` |
+| Bus type | `bus_type` | refer [u2hts_core.h](./include/u2hts_core.h#L113), default `UB_I2C` |
 | Invert X axis | `x_invert` | 0/1 |
 | Invert Y axis | `y_invert` | 0/1 |
 | Swap X&Y axis | `x_y_swap` | 0/1 |
 | Polling mode | `polling_mode` | 0/1 |
 | I2C slave address | `i2c_addr` | 7-bit device address |
-| coordinates fetch delay | `fetch_delay` | uint32_t, default 0 |
-| Interrupt flag | `irq_flag` | (1/2/3/4, refer `u2hts_core.h`) |
+| Report delay | `report_delay` | uint32_t, default 0 |
+| Interrupt trigger type | `irq_type` | refer [u2hts_core.h](./include/u2hts_core.h#L106) |
  
 These values must be configured when using an controller that does NOT support auto-config:
 | Config | Name | Value |
@@ -82,13 +82,13 @@ These values must be configured when using an controller that does NOT support a
 | X axis max | `x_max` | 65535 |
 | Y axis max | `y_max` | 65535 |
 
-Drivers will set the best values of bus configuration, but you can also override them:
+Drivers will set the default values of bus configuration, but you can also override them:
 | Config | Name | Value |
 | --- | --- | --- |
-| I2C Speed | `i2c_speed` | uint32_t |
-| SPI Speed | `spi_speed` | uint32_t |
-| SPI CPHA | `spi_cpha` | 0/1 |
-| SPI CPOL | `spi_cpol` | 0/1 |
+| I2C Speed | `i2c_speed` | uint32_t,0 use controller default value |
+| SPI Speed | `spi_speed` | uint32_t,0 use controller default value |
+| SPI CPHA | `spi_cpha` | 0/1, 0xFF(255) use controller default value |
+| SPI CPOL | `spi_cpol` | 0/1, 0xFF(255) use controller default value |
 
 Example：
 ```bash

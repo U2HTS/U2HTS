@@ -5,9 +5,100 @@
   All rights reserved.
 */
 
+#include "u2hts_rp2.h"
 #include "u2hts_core.h"
 
-static uint32_t real_irq_flag = 0x00;
+inline bool u2hts_i2c_write(uint8_t slave_addr, void* buf, size_t len,
+                                   bool stop) {
+  return (i2c_write_timeout_us(U2HTS_I2C, slave_addr, (uint8_t*)buf, len, !stop,
+                               U2HTS_I2C_TIMEOUT) == len);
+}
+
+inline bool u2hts_i2c_read(uint8_t slave_addr, void* buf, size_t len) {
+  return (i2c_read_timeout_us(U2HTS_I2C, slave_addr, (uint8_t*)buf, len, false,
+                              U2HTS_I2C_TIMEOUT) == len);
+}
+
+inline void u2hts_i2c_init(uint32_t bus_speed) {
+  gpio_set_function(U2HTS_I2C_SCL, GPIO_FUNC_I2C);
+  gpio_set_function(U2HTS_I2C_SDA, GPIO_FUNC_I2C);
+  gpio_pull_up(U2HTS_I2C_SDA);
+  gpio_pull_up(U2HTS_I2C_SCL);
+
+  i2c_init(U2HTS_I2C, bus_speed);
+}
+
+// not implemented
+inline void u2hts_spi_init(bool cpol, bool cpha, uint32_t speed_hz) {}
+
+inline bool u2hts_spi_transfer(void* buf, size_t len) {}
+
+inline void u2hts_tpint_set(bool value) {
+  gpio_put(U2HTS_TP_INT, value);
+}
+
+inline bool u2hts_i2c_detect_slave(uint8_t addr) {
+  uint8_t rx = 0;
+  return i2c_read_timeout_us(U2HTS_I2C, addr, &rx, sizeof(rx), false,
+                             U2HTS_I2C_TIMEOUT) >= 0;
+}
+
+inline void u2hts_tprst_set(bool value) {
+  gpio_put(U2HTS_TP_RST, value);
+}
+
+inline void u2hts_i2c_set_speed(uint32_t speed_hz) {
+  i2c_set_baudrate(U2HTS_I2C, speed_hz);
+}
+
+inline void u2hts_delay_ms(uint32_t ms) { sleep_ms(ms); }
+inline void u2hts_delay_us(uint32_t us) { sleep_us(us); }
+
+inline bool u2hts_usb_init() { return tud_init(BOARD_TUD_RHPORT); }
+
+inline uint16_t u2hts_get_scan_time() {
+  return (uint16_t)(to_us_since_boot(time_us_64()) / 100);
+}
+
+inline void u2hts_led_set(bool on) {
+  gpio_put(PICO_DEFAULT_LED_PIN, on);
+}
+
+static void u2hts_rp2_flash_erase(void* param) {
+  (void)param;
+  flash_range_erase(U2HTS_CONFIG_STORAGE_OFFSET, FLASH_SECTOR_SIZE);
+}
+
+static void u2hts_rp2_flash_write(void* param) {
+  uint8_t flash_program_buf[FLASH_PAGE_SIZE];
+  memset(flash_program_buf, 0xFF, FLASH_PAGE_SIZE);
+  *(uint16_t*)flash_program_buf = *(uint16_t*)param;
+  flash_range_program(U2HTS_CONFIG_STORAGE_OFFSET, flash_program_buf,
+                      FLASH_PAGE_SIZE);
+}
+
+inline void u2hts_write_config(uint16_t cfg) {
+  flash_safe_execute(u2hts_rp2_flash_erase, NULL, 0xFFFF);
+  flash_safe_execute(u2hts_rp2_flash_write, &cfg, 0xFFFF);
+}
+
+inline uint16_t u2hts_read_config() {
+  return *(uint16_t*)(XIP_BASE + U2HTS_CONFIG_STORAGE_OFFSET);
+}
+
+inline bool u2hts_key_read() { return gpio_get(U2HTS_USR_KEY); }
+
+inline void u2hts_tpint_set_mode(bool mode, bool pull) {
+  gpio_deinit(U2HTS_TP_INT);
+  gpio_set_function(U2HTS_TP_INT, GPIO_FUNC_SIO);
+  gpio_set_dir(U2HTS_TP_INT, mode);
+  pull ? gpio_pull_up(U2HTS_TP_INT) : gpio_pull_down(U2HTS_TP_INT);
+}
+
+inline bool u2hts_tpint_get() { return gpio_get(U2HTS_TP_INT); }
+
+
+static uint32_t real_irq_type = 0x00;
 static bool u2hts_usb_status = false;
 
 static const tusb_desc_device_t u2hts_device_desc = {
@@ -197,39 +288,39 @@ inline void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report,
 }
 
 inline void u2hts_ts_irq_set(bool enable) {
-  gpio_set_irq_enabled(U2HTS_TP_INT, real_irq_flag, enable);
+  gpio_set_irq_enabled(U2HTS_TP_INT, real_irq_type, enable);
 }
 
 inline static void u2hts_rp2_irq_cb(uint gpio, uint32_t event_mask) {
-  u2hts_ts_irq_status_set(gpio == U2HTS_TP_INT && (event_mask & real_irq_flag));
+  u2hts_ts_irq_status_set(gpio == U2HTS_TP_INT && (event_mask & real_irq_type));
 }
 
-inline void u2hts_ts_irq_setup(uint8_t irq_flag) {
+inline void u2hts_ts_irq_setup(U2HTS_IRQ_TYPES irq_type) {
   gpio_deinit(U2HTS_TP_INT);
-  switch (irq_flag) {
-    case U2HTS_IRQ_TYPE_LOW:
-      real_irq_flag = GPIO_IRQ_LEVEL_LOW;
+  switch (irq_type) {
+    case IRQ_TYPE_LEVEL_LOW:
+      real_irq_type = GPIO_IRQ_LEVEL_LOW;
       gpio_pull_up(U2HTS_TP_INT);
       break;
-    case U2HTS_IRQ_TYPE_HIGH:
-      real_irq_flag = GPIO_IRQ_LEVEL_HIGH;
+    case IRQ_TYPE_LEVEL_HIGH:
+      real_irq_type = GPIO_IRQ_LEVEL_HIGH;
       gpio_pull_down(U2HTS_TP_INT);
       break;
-    case U2HTS_IRQ_TYPE_RISING:
-      real_irq_flag = GPIO_IRQ_EDGE_RISE;
+    case IRQ_TYPE_EDGE_RISING:
+      real_irq_type = GPIO_IRQ_EDGE_RISE;
       gpio_pull_down(U2HTS_TP_INT);
       break;
-    case U2HTS_IRQ_TYPE_FALLING:
+    case IRQ_TYPE_EDGE_FALLING:
     default:
-      real_irq_flag = GPIO_IRQ_EDGE_FALL;
+      real_irq_type = GPIO_IRQ_EDGE_FALL;
       gpio_pull_up(U2HTS_TP_INT);
       break;
   }
-  gpio_set_irq_enabled_with_callback(U2HTS_TP_INT, real_irq_flag, true,
+  gpio_set_irq_enabled_with_callback(U2HTS_TP_INT, real_irq_type, true,
                                      u2hts_rp2_irq_cb);
 }
 
-inline void u2hts_usb_report(void* report, uint8_t report_id) {
+inline void u2hts_usb_report(const void* report, uint8_t report_id) {
   tud_hid_report(report_id, report, sizeof(u2hts_hid_report));
   u2hts_usb_status = false;
 }
