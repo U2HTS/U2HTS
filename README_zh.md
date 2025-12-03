@@ -40,39 +40,19 @@
 *切换配置*: 短按  
 在一段时间(~5秒)内无操作则应用新配置（如开启`U2HTS_ENABLE_PERSISTENT_CONFIG`则还会写入配置到flash中）。
 
-# 移植
-| MCU | 按键配置 | 保存配置 | LED | 
-| --- | --- | --- | --- |
-| RP2040/RP2350 | Y | Y | Y |
-| [STM32F070F6](https://github.com/CNflysky/U2HTS_F070F6) | Y | Y | Y |
-| CH32X033F8 | Y | Y | Y |
-
-# RP系列电路
-`u2hts_rp2.h`: 
-```c
-#define U2HTS_I2C_SDA 10
-#define U2HTS_I2C_SCL 11
-#define U2HTS_TP_INT 6
-#define U2HTS_TP_RST 5
-```
-所有I/O端口直接连接即可，无需任何上/下拉电阻。  
-
-# RP系列构建
-安装`VS code`和`Raspberry Pi Pico`插件, 导入项目后构建即可。
-
-# RP系列配置
+# 配置
 RP系列支持通过`Picotool`工具来修改触摸屏相关设置，不需要重新编译代码。  
 | 配置 | 变量名 | 可选值 |
 | --- | --- | --- |
 | 控制器名 | `controller` | 参考`触摸控制器`一节 |
-| 总线类型 | `bus_type` | 参考[u2hts_core.h](./include/u2hts_core.h#L113), 默认为`UB_I2C` |
+| 总线类型 | `bus_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L115), 默认为`UB_I2C` |
 | 反转X轴 | `x_invert` | 0/1 |
 | 反转Y轴 | `y_invert` | 0/1 |
 | 交换XY轴 | `x_y_swap` | 0/1 |
 | 轮询模式 | `polling_mode` | 0/1 |
 | I2C从机地址 | `i2c_addr` | 7位地址 |
 | 回报延时 | `report_delay` | uint32_t, 默认为0 |
-| 中断触发类型 | `irq_type` | 参考[u2hts_core.h](./include/u2hts_core.h#L106) |
+| 中断触发类型 | `irq_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L108) |
 
 如果控制器不支持自动配置，则必须配置以下参数：
 | 配置 | 变量名 | 可选值 |
@@ -94,3 +74,23 @@ RP系列支持通过`Picotool`工具来修改触摸屏相关设置，不需要�
 picotool config -s x_invert 1 build/U2HTS.uf2
 picotool load -f build/U2HTS.uf2
 ```
+
+# 移植
+| MCU | 按键配置 | 保存配置 | LED | 
+| --- | --- | --- | --- |
+| RP2040/RP2350 | Y | Y | Y |
+| [STM32F070F6](https://github.com/CNflysky/U2HTS_F070F6) | Y | Y | Y |
+| CH32X033F8 | Y | Y | Y |
+
+# RP系列电路
+`u2hts_rp2.h`: 
+```c
+#define U2HTS_I2C_SDA 10
+#define U2HTS_I2C_SCL 11
+#define U2HTS_TP_INT 6
+#define U2HTS_TP_RST 5
+```
+所有I/O端口直接连接即可，无需任何上/下拉电阻。  
+
+# RP系列构建
+安装`VS code`和`Raspberry Pi Pico`插件, 导入项目后构建即可。

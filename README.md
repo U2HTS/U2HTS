@@ -41,39 +41,19 @@ When in configuration mode, the LED stays on. Pressing the button once will make
 
 After a idle time (~5s) system will apply new config (and save to flash if `U2HTS_ENABLE_PERSISTENT_CONFIG` enabled).
 
-# Ports
-| MCU | Key | Persistent config | LED | 
-| --- | --- | --- | --- |
-| RP2040/RP2350 | Y | Y | Y |
-| [STM32F070F6](https://github.com/CNflysky/U2HTS_F070F6) | Y | Y | Y |
-| CH32X033F8 | Y | Y | Y |
-
-# RP2 Circuit
-`u2hts_rp2.h`: 
-```c
-#define U2HTS_I2C_SDA 10
-#define U2HTS_I2C_SCL 11
-#define U2HTS_TP_INT 6
-#define U2HTS_TP_RST 5
-```
-No external pull-up/pull-down resistors are required.  
-
-# RP2 Build
-Install `VS code` and `Raspberry Pi Pico` plugin, import this repository, then build.
-
-# RP2 Config
+# Config
 You can config touchscreen via `picotool` without rebuild firmware on RP2 platform.
 | Config | Name | Value |
 | --- | --- | --- |
 | Controller name | `controller` | refer `Touch controllers` section |
-| Bus type | `bus_type` | refer [u2hts_core.h](./include/u2hts_core.h#L113), default `UB_I2C` |
+| Bus type | `bus_type` | refer [u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L115), default `UB_I2C` |
 | Invert X axis | `x_invert` | 0/1 |
 | Invert Y axis | `y_invert` | 0/1 |
 | Swap X&Y axis | `x_y_swap` | 0/1 |
 | Polling mode | `polling_mode` | 0/1 |
 | I2C slave address | `i2c_addr` | 7-bit device address |
 | Report delay | `report_delay` | uint32_t, default 0 |
-| Interrupt trigger type | `irq_type` | refer [u2hts_core.h](./include/u2hts_core.h#L106) |
+| Interrupt trigger type | `irq_type` | refer [u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L108) |
  
 These values must be configured when using an controller that does NOT support auto-config:
 | Config | Name | Value |
@@ -95,3 +75,23 @@ Example：
 picotool config -s x_invert 1 build/U2HTS.uf2
 picotool load -f build/U2HTS.uf2
 ```
+
+# Ports
+| MCU | Key | Persistent config | LED | 
+| --- | --- | --- | --- |
+| RP2040/RP2350 | Y | Y | Y |
+| [STM32F070F6](https://github.com/CNflysky/U2HTS_F070F6) | Y | Y | Y |
+| CH32X033F8 | Y | Y | Y |
+
+# RP2 Circuit
+`u2hts_rp2.h`: 
+```c
+#define U2HTS_I2C_SDA 10
+#define U2HTS_I2C_SCL 11
+#define U2HTS_TP_INT 6
+#define U2HTS_TP_RST 5
+```
+No external pull-up/pull-down resistors are required.  
+
+# RP2 Build
+Install `VS code` and `Raspberry Pi Pico` plugin, import this repository, then build.
