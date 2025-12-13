@@ -6,10 +6,11 @@
 */
 
 #include "u2hts_rp2.h"
+
 #include "u2hts_core.h"
 
 inline bool u2hts_i2c_write(uint8_t slave_addr, void* buf, size_t len,
-                                   bool stop) {
+                            bool stop) {
   return (i2c_write_timeout_us(U2HTS_I2C, slave_addr, (uint8_t*)buf, len, !stop,
                                U2HTS_I2C_TIMEOUT) == len);
 }
@@ -31,11 +32,9 @@ inline void u2hts_i2c_init(uint32_t bus_speed) {
 // not implemented
 inline void u2hts_spi_init(bool cpol, bool cpha, uint32_t speed_hz) {}
 
-inline bool u2hts_spi_transfer(void* buf, size_t len) {}
+inline bool u2hts_spi_transfer(void* buf, size_t len) { return false; }
 
-inline void u2hts_tpint_set(bool value) {
-  gpio_put(U2HTS_TP_INT, value);
-}
+inline void u2hts_tpint_set(bool value) { gpio_put(U2HTS_TP_INT, value); }
 
 inline bool u2hts_i2c_detect_slave(uint8_t addr) {
   uint8_t rx = 0;
@@ -43,9 +42,7 @@ inline bool u2hts_i2c_detect_slave(uint8_t addr) {
                              U2HTS_I2C_TIMEOUT) >= 0;
 }
 
-inline void u2hts_tprst_set(bool value) {
-  gpio_put(U2HTS_TP_RST, value);
-}
+inline void u2hts_tprst_set(bool value) { gpio_put(U2HTS_TP_RST, value); }
 
 inline void u2hts_i2c_set_speed(uint32_t speed_hz) {
   i2c_set_baudrate(U2HTS_I2C, speed_hz);
@@ -60,9 +57,7 @@ inline uint16_t u2hts_get_scan_time() {
   return (uint16_t)(to_us_since_boot(time_us_64()) / 100);
 }
 
-inline void u2hts_led_set(bool on) {
-  gpio_put(PICO_DEFAULT_LED_PIN, on);
-}
+inline void u2hts_led_set(bool on) { gpio_put(PICO_DEFAULT_LED_PIN, on); }
 
 static void u2hts_rp2_flash_erase(void* param) {
   (void)param;
@@ -97,7 +92,6 @@ inline void u2hts_tpint_set_mode(bool mode, bool pull) {
 
 inline bool u2hts_tpint_get() { return gpio_get(U2HTS_TP_INT); }
 
-
 static uint32_t real_irq_type = 0x00;
 static bool u2hts_usb_status = false;
 
@@ -119,20 +113,36 @@ static const tusb_desc_device_t u2hts_device_desc = {
     .iSerialNumber = 0x03,
 
     .bNumConfigurations = 0x01};
-
+// clang-format off
 static const uint8_t u2hts_hid_report_desc[] = {
-    HID_USAGE_PAGE(HID_USAGE_PAGE_DIGITIZER), HID_USAGE(0x04),
+    HID_USAGE_PAGE(HID_USAGE_PAGE_DIGITIZER), 
+    HID_USAGE(0x04),
     HID_COLLECTION(HID_COLLECTION_APPLICATION),
-    HID_REPORT_ID(U2HTS_HID_TP_REPORT_ID) HID_USAGE(0x22), HID_PHYSICAL_MIN(0),
-    HID_LOGICAL_MIN(0), HID_UNIT_EXPONENT(0x0e), HID_UNIT(0x11),
-    // 10 points
-    U2HTS_HID_TP_DESC, U2HTS_HID_TP_DESC, U2HTS_HID_TP_DESC, U2HTS_HID_TP_DESC,
-    U2HTS_HID_TP_DESC, U2HTS_HID_TP_DESC, U2HTS_HID_TP_DESC, U2HTS_HID_TP_DESC,
-    U2HTS_HID_TP_DESC, U2HTS_HID_TP_DESC, U2HTS_HID_TP_INFO_DESC,
-    HID_REPORT_ID(U2HTS_HID_TP_MAX_COUNT_ID) U2HTS_HID_TP_MAX_COUNT_DESC,
-    HID_REPORT_ID(U2HTS_HID_TP_MS_THQA_CERT_ID) U2HTS_HID_TP_MS_THQA_CERT_DESC,
-
-    HID_COLLECTION_END};
+    HID_REPORT_ID(U2HTS_HID_REPORT_TP_ID)
+      HID_USAGE(0x22), 
+      HID_PHYSICAL_MIN(0),
+      HID_LOGICAL_MIN(0), 
+      HID_UNIT_EXPONENT(0x0e), 
+      HID_UNIT(0x11),
+      // 10 points
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_DESC,
+      U2HTS_HID_TP_INFO_DESC,
+    HID_REPORT_ID(U2HTS_HID_REPORT_TP_MAX_COUNT_ID)
+      U2HTS_HID_TP_MAX_COUNT_DESC,
+    HID_REPORT_ID(U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID)
+      U2HTS_HID_TP_MS_THQA_CERT_DESC,
+    HID_COLLECTION_END,
+};
+// clang-format on
 
 // see
 // https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/touchscreen-required-hid-top-level-collections
@@ -161,24 +171,24 @@ static const uint8_t u2hts_ms_thqa_cert[256] = {
     0xcf, 0x17, 0xb7, 0xb8, 0xf4, 0xe1, 0x33, 0x08, 0x24, 0x8b, 0xc4, 0x43,
     0xa5, 0xe5, 0x24, 0xc2};
 
-static uint16_t _desc_str[32 + 1];
+static uint16_t _desc_str[32 + 1] = {0};
 
 static const uint8_t u2hts_config_desc[] = {
     // Config number, interface count, string index, total length, attribute,
     // power in mA
     TUD_CONFIG_DESCRIPTOR(1, 1, 0, TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN,
                           TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP, 100),
-
     // Interface number, string index, protocol, report descriptor len, EP In
     // address, endpoint size & polling interval
     TUD_HID_DESCRIPTOR(0, 0, HID_ITF_PROTOCOL_NONE,
                        sizeof(u2hts_hid_report_desc), 0x81, 64, 1)};
 
 static uint8_t const* string_desc_arr[] = {
-    (const char[]){0x09, 0x04},  // 0: is supported language is English (0x0409)
-    "U2HTS",                     // 1: Manufacturer
-    "USB to HID Touchscreen",    // 2: Product
-    NULL,                        // 3: Serials will use unique ID if possible
+    (const uint8_t[]){0x09,
+                      0x04},  // 0: is supported language is English (0x0409)
+    (const uint8_t*)"U2HTS",  // 1: Manufacturer
+    (const uint8_t*)"USB to HID Touchscreen",  // 2: Product
+    NULL,  // 3: Serials will use unique ID if possible
 };
 
 inline uint8_t const* tud_descriptor_device_cb(void) {
@@ -218,10 +228,10 @@ inline uint16_t const* tud_descriptor_string_cb(uint8_t index,
       if (!(index < sizeof(string_desc_arr) / sizeof(string_desc_arr[0])))
         return NULL;
 
-      const char* str = string_desc_arr[index];
+      const uint8_t* str = string_desc_arr[index];
 
       // Cap at max char
-      chr_count = strlen(str);
+      chr_count = strlen((const char*)str);
       size_t const max_count =
           sizeof(_desc_str) / sizeof(_desc_str[0]) - 1;  // -1 for string type
       if (chr_count > max_count) chr_count = max_count;
@@ -254,7 +264,7 @@ inline void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id,
                                   uint8_t const* buffer, uint16_t bufsize) {
   U2HTS_LOG_DEBUG(
       "Got hid set report request: instance = %d, report_id = %d, report_type "
-      "= %d, busfize = %d",
+      "= %d, bufsize = %d",
       instance, report_id, report_type, bufsize);
 }
 
@@ -267,10 +277,10 @@ inline uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
       instance, report_id, report_type, reqlen);
   if (report_type == HID_REPORT_TYPE_FEATURE) {
     switch (report_id) {
-      case U2HTS_HID_TP_MAX_COUNT_ID:
+      case U2HTS_HID_REPORT_TP_MAX_COUNT_ID:
         buffer[0] = u2hts_get_max_tps();
         break;
-      case U2HTS_HID_TP_MS_THQA_CERT_ID:
+      case U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID:
         memcpy(buffer, u2hts_ms_thqa_cert, reqlen);
         u2hts_usb_status = true;
         break;
@@ -320,7 +330,7 @@ inline void u2hts_ts_irq_setup(U2HTS_IRQ_TYPES irq_type) {
                                      u2hts_rp2_irq_cb);
 }
 
-inline void u2hts_usb_report(const void* report, uint8_t report_id) {
+inline void u2hts_usb_report(uint8_t report_id, const void* report) {
   tud_hid_report(report_id, report, sizeof(u2hts_hid_report));
   u2hts_usb_status = false;
 }

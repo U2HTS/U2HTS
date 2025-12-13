@@ -6,8 +6,8 @@
 */
 
 #include "pico/binary_info.h"
-#include "u2hts_rp2.h"
 #include "u2hts_core.h"
+#include "u2hts_rp2.h"
 
 #define U2HTS_BI_INFO_TS_CFG_TAG 0x0000
 #define U2HTS_BI_INFO_TS_CFG_ID 0x0000
@@ -55,10 +55,10 @@ int main() {
                        spi_speed, 0x00));
   // override SPI cpol
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       spi_cpol, 0xFF));
+                       spi_cpol, 0xFF));  // default
   // override SPI cpha
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       spi_cpha, 0xFF));
+                       spi_cpha, 0xFF));  // default
   // IRQ flag
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
                        irq_type, 0));
@@ -87,10 +87,9 @@ int main() {
                       .polling_mode = polling_mode};
   U2HTS_ERROR_CODES ret = u2hts_init(&cfg);
   if (ret)
+    while (1)
 #ifdef U2HTS_ENABLE_LED
-    u2hts_led_show_error_code(ret);
-#else
-    while (1);
+      u2hts_led_show_error_code(ret);
 #endif
   while (1) {
     tud_task();

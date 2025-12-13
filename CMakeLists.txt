@@ -35,11 +35,11 @@ pico_sdk_init()
 
 add_library(u2hts_core_settings INTERFACE)
 target_compile_definitions(u2hts_core_settings INTERFACE
-    -DU2HTS_LOG_LEVEL=U2HTS_LOG_LEVEL_INFO
-    -DU2HTS_ENABLE_LED
-    -DU2HTS_ENABLE_PERSISTENT_CONFIG
-    -DU2HTS_ENABLE_KEY
-    -DU2HTS_CONFIG_TIMEOUT=5000
+    U2HTS_LOG_LEVEL=U2HTS_LOG_LEVEL_DEBUG
+    U2HTS_ENABLE_LED
+    U2HTS_ENABLE_PERSISTENT_CONFIG
+    U2HTS_ENABLE_KEY
+    U2HTS_CONFIG_TIMEOUT=5000
 )
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)
@@ -93,7 +93,9 @@ target_link_libraries(U2HTS PUBLIC
     u2hts_core_settings
 )
 
-target_compile_options(U2HTS PRIVATE -Wunused)
+target_compile_options(U2HTS PRIVATE 
+    -Wall
+)
 
 if(PICO_PLATFORM MATCHES "rp2350")
     pico_set_linker_script(U2HTS ${CMAKE_CURRENT_LIST_DIR}/memmap_rp2350.ld)
