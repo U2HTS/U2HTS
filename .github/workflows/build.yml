@@ -1,0 +1,38 @@
+name: build firmware
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  PICO_SDK_FETCH_FROM_GIT: 1
+  PICO_SDK_FETCH_FROM_GIT_TAG: 2.2.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    
+    - name: install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-arm-none-eabi libnewlib-dev libnewlib-arm-none-eabi ninja-build cmake
+    
+    - name: Configure and build
+      run: |
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel
+        cmake --build build
+    
+    - name: Upload firmware
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ github.event.repository.name }}-${{ github.run_id }}
+        path: |
+          build/*.uf2
+          build/*.bin
