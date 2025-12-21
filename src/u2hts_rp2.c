@@ -125,21 +125,19 @@ static const uint8_t u2hts_hid_report_desc[] = {
       HID_UNIT_EXPONENT(0x0e), 
       HID_UNIT(0x11),
       // 10 points
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_DESC,
-      U2HTS_HID_TP_INFO_DESC,
-    HID_REPORT_ID(U2HTS_HID_REPORT_TP_MAX_COUNT_ID)
-      U2HTS_HID_TP_MAX_COUNT_DESC,
-    HID_REPORT_ID(U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID)
-      U2HTS_HID_TP_MS_THQA_CERT_DESC,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP,
+      U2HTS_HID_TP_INFO,
+      U2HTS_HID_TP_MAX_COUNT_DESC(U2HTS_HID_REPORT_TP_MAX_COUNT_ID),
+      U2HTS_HID_TP_MS_THQA_CERT_DESC(U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID),
     HID_COLLECTION_END,
 };
 // clang-format on
@@ -200,7 +198,7 @@ inline uint8_t const* tud_hid_descriptor_report_cb(uint8_t instance) {
 }
 
 inline uint8_t const* tud_descriptor_configuration_cb(uint8_t index) {
-  return u2hts_config_desc;
+  return (uint8_t const*)u2hts_config_desc;
 }
 
 // Invoked when received GET STRING DESCRIPTOR request
