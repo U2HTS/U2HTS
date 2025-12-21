@@ -32,7 +32,7 @@ jobs:
     - name: Upload firmware
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.repository.name }}-${{ github.run_id }}
+        name: ${{ github.event.repository.name }}_RP2-${{ github.run_id }}
         path: |
           build/*.uf2
           build/*.bin

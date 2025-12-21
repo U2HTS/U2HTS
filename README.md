@@ -14,7 +14,7 @@ USB HID multitouch touchscreen based on Raspberry Pi RP2 MCUs.
 - Support persistent config
 
 # Touch controllers
-See [U2HTS touch controllers](https://github.com/CNflysky/u2hts_touch_controllers/blob/main/README.md)
+See [U2HTS touch controllers](https://github.com/U2HTS/u2hts_touch_controllers/blob/main/README.md)
 
 # Configs
 | Config | Invert X axis | Invert Y axis | Swap X Y axes |
@@ -80,7 +80,7 @@ picotool load -f build/U2HTS.uf2
 | MCU | Key | Persistent config | LED | 
 | --- | --- | --- | --- |
 | RP2040/RP2350 | Y | Y | Y |
-| [STM32F070F6](https://github.com/CNflysky/U2HTS_F070F6) | Y | Y | Y |
+| [STM32F070F6](https://github.com/U2HTS/U2HTS_F070F6) | Y | Y | Y |
 | CH32X033F8 | Y | Y | Y |
 
 # RP2 Circuit
@@ -94,4 +94,18 @@ picotool load -f build/U2HTS.uf2
 No external pull-up/pull-down resistors are required.  
 
 # RP2 Build
-Install `VS code` and `Raspberry Pi Pico` plugin, import this repository, then build.
+## VSCode Extension
+Install `VS code` and `Raspberry Pi Pico` extension, import this repository, then build.
+## GitHub action
+Fork this repository to your account.  
+Click `Actions` page, click `enable workflow`.  
+Click `Build firmware` on the left，click `Run workflow`.  
+Wait until build complete and grab the artifacts.  
+## Manual
+```bash
+sudo apt install gcc-arm-none-eabi libnewlib-dev libnewlib-arm-none-eabi ninja-build cmake
+git clone https://github.com/U2HTS/U2HTS.git --recursive --depth 1
+cd U2HTS
+PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.2.0 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel
+cmake --build build
+```

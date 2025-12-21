@@ -13,7 +13,7 @@
 - 支持持久化保存配置
 
 # 触摸控制器
-参考[U2HTS touch controllers](https://github.com/CNflysky/u2hts_touch_controllers/blob/main/README.md)
+参考[U2HTS touch controllers](https://github.com/U2HTS/u2hts_touch_controllers/blob/main/README.md)
 
 # 配置
 内置4个配置：
@@ -79,10 +79,10 @@ picotool load -f build/U2HTS.uf2
 | MCU | 按键配置 | 保存配置 | LED | 
 | --- | --- | --- | --- |
 | RP2040/RP2350 | Y | Y | Y |
-| [STM32F070F6](https://github.com/CNflysky/U2HTS_F070F6) | Y | Y | Y |
+| [STM32F070F6](https://github.com/U2HTS/U2HTS_F070F6) | Y | Y | Y |
 | CH32X033F8 | Y | Y | Y |
 
-# RP系列电路
+# RP2 电路
 `u2hts_rp2.h`: 
 ```c
 #define U2HTS_I2C_SDA 10
@@ -92,5 +92,19 @@ picotool load -f build/U2HTS.uf2
 ```
 所有I/O端口直接连接即可，无需任何上/下拉电阻。  
 
-# RP系列构建
-安装`VS code`和`Raspberry Pi Pico`插件, 导入项目后构建即可。
+# RP2 构建
+## VSCode插件
+安装`VS code`和`Raspberry Pi Pico`插件, 导入项目后构建即可。  
+## 借助GitHub actions构建
+点击`fork`按钮，将本仓库fork到你的账号下。  
+点击`Actions`标签页，点击`Enable workflow`。  
+点击左边的`Build firmware`，点击`Run workflow`。  
+构建完成后下载产物即可。
+## 手动构建
+```bash
+sudo apt install gcc-arm-none-eabi libnewlib-dev libnewlib-arm-none-eabi ninja-build cmake
+git clone https://github.com/U2HTS/U2HTS.git --recursive --depth 1
+cd U2HTS
+PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.2.0 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel
+cmake --build build
+```

@@ -106,3 +106,4 @@ else()
 endif()
 
 pico_add_extra_outputs(U2HTS)
+pico_set_program_url(U2HTS "https://github.com/U2HTS/U2HTS")
