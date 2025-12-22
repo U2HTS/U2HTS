@@ -4,8 +4,8 @@ USB HID multitouch touchscreen based on Raspberry Pi RP2 MCUs.
 [zh_CN(简体中文)](./README_zh.md)
 
 # Features
-- Support max 10 touch points
-- SUpport I2C & SPI buses
+- Support multitouch up to 10 tps
+- Support I2C & SPI buses
 - Support match touch controller automatically
 - Support change touchscreen orientation
 - Support automatically configure touchscreen parameters(need controller support)
@@ -32,6 +32,7 @@ If the LED blinks in a looping pattern and the host does not recognize the devic
 | 2 | No compatible controller found |
 | 3 | Required parameters not configured |
 | 4 | Failed to initialise controller |
+| 5 | Controller config invalid |
   
 When in configuration mode, the LED stays on. Pressing the button once will make the LED blink `n` times, indicating that it has switched to configuration number `n`.  
 
@@ -42,7 +43,6 @@ When in configuration mode, the LED stays on. Pressing the button once will make
 After a idle time (~5s) system will apply new config (and save to flash if `U2HTS_ENABLE_PERSISTENT_CONFIG` enabled).
 
 # Config
-You can config touchscreen via `picotool` without rebuild firmware on RP2 platform.
 | Config | Name | Value |
 | --- | --- | --- |
 | Controller name | `controller` | refer `Touch controllers` section |
@@ -70,12 +70,6 @@ Drivers will set the default values of bus configuration, but you can also overr
 | SPI CPHA | `spi_cpha` | 0/1, 0xFF(255) use controller default value |
 | SPI CPOL | `spi_cpol` | 0/1, 0xFF(255) use controller default value |
 
-Example：
-```bash
-picotool config -s x_invert 1 build/U2HTS.uf2
-picotool load -f build/U2HTS.uf2
-```
-
 # Ports
 | MCU | Key | Persistent config | LED | 
 | --- | --- | --- | --- |
@@ -92,6 +86,14 @@ picotool load -f build/U2HTS.uf2
 #define U2HTS_TP_RST 5
 ```
 No external pull-up/pull-down resistors are required.  
+
+# RP2 Config
+Touchscreen config can be easily changed using `picotool` without rebuild of firmware on RP2 platforms.
+Example：
+```bash
+picotool config -s x_invert 1 build/U2HTS.uf2
+picotool load -f build/U2HTS.uf2
+```
 
 # RP2 Build
 ## VSCode Extension

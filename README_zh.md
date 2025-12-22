@@ -3,7 +3,7 @@
 `U2HTS` 是 **U**SB to **H**ID **T**ouch**S**creen 的缩写。  
 
 # 特性
-- 支持多点触摸
+- 支持多点触摸（最大10点）
 - 支持I2C与SPI总线
 - 支持自动匹配控制器
 - 支持配置触摸屏方向
@@ -32,6 +32,7 @@
 | 2 | 控制器不兼容 |
 | 3 | 未配置必要的参数 |
 | 4 | 控制器初始化失败 |
+| 5 | 控制器配置无效 |
   
 如果处于配置模式下，LED会常亮。按下一次按键LED会闪烁`n`次，代表切换到第`n`个配置。   
 
@@ -41,7 +42,6 @@
 在一段时间(~5秒)内无操作则应用新配置（如开启`U2HTS_ENABLE_PERSISTENT_CONFIG`则还会写入配置到flash中）。
 
 # 配置
-RP系列支持通过`Picotool`工具来修改触摸屏相关设置，不需要重新编译代码。  
 | 配置 | 变量名 | 可选值 |
 | --- | --- | --- |
 | 控制器名 | `controller` | 参考`触摸控制器`一节 |
@@ -69,12 +69,6 @@ RP系列支持通过`Picotool`工具来修改触摸屏相关设置，不需要�
 | SPI CPHA | `spi_cpha` | 0/1，置0xFF(255)则使用控制器默认值 |
 | SPI CPOL | `spi_cpol` | 0/1，置0xFF(255)则使用控制器默认值 |
 
-示例：
-```bash
-picotool config -s x_invert 1 build/U2HTS.uf2
-picotool load -f build/U2HTS.uf2
-```
-
 # 移植
 | MCU | 按键配置 | 保存配置 | LED | 
 | --- | --- | --- | --- |
@@ -91,6 +85,14 @@ picotool load -f build/U2HTS.uf2
 #define U2HTS_TP_RST 5
 ```
 所有I/O端口直接连接即可，无需任何上/下拉电阻。  
+
+# RP2 配置
+RP2支持通过`Picotool`工具来修改触摸屏相关设置，不需要重新生成固件。  
+示例：
+```bash
+picotool config -s x_invert 1 build/U2HTS.uf2
+picotool load -f build/U2HTS.uf2
+```
 
 # RP2 构建
 ## VSCode插件
