@@ -26,15 +26,15 @@ jobs:
     
     - name: build for Pico
       run: |
-        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=Pico
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico
         cmake --build build
-        mv build/U2HTS.uf2 U2HTS_Pico.uf2
+        mv build/U2HTS.uf2 U2HTS_pico.uf2
 
     - name: build for Pico2
       run: |
-        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=Pico2
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico2
         cmake --build build
-        mv build/U2HTS.uf2 U2HTS_Pico2.uf2
+        mv build/U2HTS.uf2 U2HTS_pico2.uf2
 
     - name: Upload firmware
       uses: actions/upload-artifact@v4
