@@ -32,6 +32,7 @@ jobs:
 
     - name: build for Pico2
       run: |
+        rm -rf build/*
         cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico2
         cmake --build build
         mv build/U2HTS.uf2 U2HTS_pico2.uf2
