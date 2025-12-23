@@ -24,15 +24,22 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y gcc-arm-none-eabi libnewlib-dev libnewlib-arm-none-eabi ninja-build cmake
     
-    - name: Configure and build
+    - name: build for Pico
       run: |
-        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=Pico
         cmake --build build
-    
+        mv build/U2HTS.uf2 U2HTS_Pico.uf2
+
+    - name: build for Pico2
+      run: |
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=Pico2
+        cmake --build build
+        mv build/U2HTS.uf2 U2HTS_Pico2.uf2
+
     - name: Upload firmware
       uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.repository.name }}_RP2-${{ github.run_id }}
         path: |
-          build/*.uf2
-          build/*.bin
+          U2HTS_Pico.uf2
+          U2HTS_Pico2.uf2
