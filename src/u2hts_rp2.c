@@ -53,7 +53,7 @@ inline void u2hts_delay_us(uint32_t us) { sleep_us(us); }
 
 inline bool u2hts_usb_init() { return tud_init(BOARD_TUD_RHPORT); }
 
-inline uint16_t u2hts_get_scan_time() {
+inline uint16_t u2hts_get_timestamp() {
   return (uint16_t)(to_us_since_boot(time_us_64()) / 100);
 }
 
@@ -81,7 +81,7 @@ inline uint16_t u2hts_read_config() {
   return *(uint16_t*)(XIP_BASE + U2HTS_CONFIG_STORAGE_OFFSET);
 }
 
-inline bool u2hts_key_read() { return gpio_get(U2HTS_USR_KEY); }
+inline bool u2hts_usrkey_get() { return gpio_get(U2HTS_USR_KEY); }
 
 inline void u2hts_tpint_set_mode(bool mode, bool pull) {
   gpio_deinit(U2HTS_TP_INT);

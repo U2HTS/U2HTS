@@ -6,7 +6,7 @@ USB HID multitouch touchscreen based on Raspberry Pi RP2 MCUs.
 # Features
 - Support multitouch up to 10 tps
 - Support I2C & SPI buses
-- Support match touch controller automatically
+- Support detect touch controller
 - Support change touchscreen orientation
 - Support automatically configure touchscreen parameters(need controller support)
 - Support switch config in runtime via key

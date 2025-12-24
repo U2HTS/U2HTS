@@ -93,6 +93,6 @@ int main() {
 #endif
   while (1) {
     tud_task();
-    u2hts_main();
+    u2hts_task();
   }
 }
