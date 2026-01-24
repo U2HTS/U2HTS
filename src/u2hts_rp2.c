@@ -20,13 +20,13 @@ inline bool u2hts_i2c_read(uint8_t slave_addr, void* buf, size_t len) {
                               U2HTS_I2C_TIMEOUT) == len);
 }
 
-inline void u2hts_i2c_init(uint32_t bus_speed) {
+inline void u2hts_i2c_init(uint32_t speed_hz) {
   gpio_set_function(U2HTS_I2C_SCL, GPIO_FUNC_I2C);
   gpio_set_function(U2HTS_I2C_SDA, GPIO_FUNC_I2C);
   gpio_pull_up(U2HTS_I2C_SDA);
   gpio_pull_up(U2HTS_I2C_SCL);
 
-  i2c_init(U2HTS_I2C, bus_speed);
+  i2c_init(U2HTS_I2C, speed_hz);
 }
 
 // not implemented
@@ -303,7 +303,7 @@ inline static void u2hts_rp2_irq_cb(uint gpio, uint32_t event_mask) {
   u2hts_ts_irq_status_set(gpio == U2HTS_TP_INT && (event_mask & real_irq_type));
 }
 
-inline void u2hts_ts_irq_setup(U2HTS_IRQ_TYPES irq_type) {
+inline void u2hts_ts_irq_init(U2HTS_IRQ_TYPES irq_type) {
   gpio_deinit(U2HTS_TP_INT);
   switch (irq_type) {
     case IRQ_TYPE_LEVEL_LOW:
@@ -328,7 +328,7 @@ inline void u2hts_ts_irq_setup(U2HTS_IRQ_TYPES irq_type) {
                                      u2hts_rp2_irq_cb);
 }
 
-inline void u2hts_usb_report(uint8_t report_id, const void* report) {
+inline void u2hts_usb_report(uint8_t report_id, const u2hts_hid_report* report) {
   tud_hid_report(report_id, report, sizeof(u2hts_hid_report));
   u2hts_usb_status = false;
 }
