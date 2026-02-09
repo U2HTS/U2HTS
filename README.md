@@ -54,6 +54,7 @@ After a idle time (~5s) system will apply new config (and save to flash if `U2HT
 | I2C slave address | `i2c_addr` | 7-bit device address |
 | Report delay | `report_delay` | uint32_t, default 0 |
 | Interrupt trigger type | `irq_type` | refer [u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L108) |
+| Custom Controller Configuration | `custom_controller_config` | string, max length is 512 by default |
  
 These values must be configured when using an controller that does NOT support auto-config:
 | Config | Name | Value |
@@ -69,6 +70,12 @@ Drivers will set the default values of bus configuration, but you can also overr
 | SPI Speed | `spi_speed` | uint32_t,0 use controller default value |
 | SPI CPHA | `spi_cpha` | 0/1, 0xFF(255) use controller default value |
 | SPI CPOL | `spi_cpol` | 0/1, 0xFF(255) use controller default value |
+
+# Custom Controller Configuration
+If a controller requires additional parameters for configuration, the configuration can be written as key-value pairs into [custom_controller_config](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L197), and then retrieved within the controller driver.  
+The configuration format is `xxx.yyy=zzz`, with multiple configuration items separated by spaces, such as `aaa.bbb=ccc foo.bar=yum`.  
+The maximum length of `custom_controller_config` and the maximum key length are defined in [u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L38).  
+See [dummy_test.c](https://github.com/U2HTS/u2hts_touch_controller/blob/main/dummy_test.h#L28) for examples.  
 
 # Ports
 | MCU | Key | Persistent config | LED | 

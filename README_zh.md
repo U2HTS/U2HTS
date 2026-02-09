@@ -53,6 +53,7 @@
 | I2C从机地址 | `i2c_addr` | 7位地址 |
 | 回报延时 | `report_delay` | uint32_t, 默认为0 |
 | 中断触发类型 | `irq_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L108) |
+| 自定义控制器配置 | `custom_controller_config` | 字符串, 默认最大512字节 |
 
 如果控制器不支持自动配置，则必须配置以下参数：
 | 配置 | 变量名 | 可选值 |
@@ -68,6 +69,12 @@
 | SPI速度 | `spi_speed` | uint32_t, 置0则使用控制器默认值 |
 | SPI CPHA | `spi_cpha` | 0/1，置0xFF(255)则使用控制器默认值 |
 | SPI CPOL | `spi_cpol` | 0/1，置0xFF(255)则使用控制器默认值 |
+
+# 自定义控制器配置
+如果控制器需要一些额外参数进行配置，可以将配置以键值对的方式写入到[custom_controller_config](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L197)中，再在控制器驱动中获取该配置项。  
+配置格式为`xxx.yyy=zzz`，多个配置项使用空格分开，如`aaa.bbb=ccc foo.bar=yum`。  
+在[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L38)处定义了`custom_controller_config`的最大长度和最大键长度。  
+查看[dummy_test.c](https://github.com/U2HTS/u2hts_touch_controller/blob/main/dummy_test.h#L28)来获取实际使用案例。
 
 # 移植
 | MCU | 按键配置 | 保存配置 | LED | 

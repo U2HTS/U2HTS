@@ -9,8 +9,17 @@
 #include "u2hts_core.h"
 #include "u2hts_rp2.h"
 
-#define U2HTS_BI_INFO_TS_CFG_TAG 0x0000
-#define U2HTS_BI_INFO_TS_CFG_ID 0x0000
+#define U2HTS_BI_INFO_CONTROLLER_TAG 0x0000
+#define U2HTS_BI_INFO_CONTROLLER_ID 0x0000
+
+#define U2HTS_BI_INFO_COORDINATE_CONFIG 0x0001
+#define U2HTS_BI_INFO_COORDINATE_ID 0x0000
+
+#define U2HTS_BI_INFO_BUS_CONFIG 0x0002
+#define U2HTS_BI_INFO_BUS_ID 0x0000
+
+#define U2HTS_BI_INFO_MISC_CONFIG 0x0003
+#define U2HTS_BI_INFO_MISC_ID 0x0000
 
 int main() {
   stdio_init_all();
@@ -18,73 +27,94 @@ int main() {
   // Export config to picotool.
   // Change with `picotool config -s <cfg> <val> U2HTS.uf2`
   // E.g. `picotool config -s x_max 1920 U2HTS.uf2`
-  bi_decl(bi_program_feature_group(
-      U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID, "Touchscreen config"));
+  bi_decl(bi_program_feature_group(U2HTS_BI_INFO_CONTROLLER_TAG,
+                                   U2HTS_BI_INFO_CONTROLLER_ID,
+                                   "Controller Selection"));
   // controller name
-  bi_decl(bi_ptr_string(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                        controller, "auto", 32));
+  bi_decl(bi_ptr_string(U2HTS_BI_INFO_CONTROLLER_TAG,
+                        U2HTS_BI_INFO_CONTROLLER_ID, controller, "auto", 32));
+  bi_decl(bi_program_feature_group(U2HTS_BI_INFO_COORDINATE_CONFIG,
+                                   U2HTS_BI_INFO_COORDINATE_ID,
+                                   "Coordinate Configuration"));
   // invert X axis
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       x_invert, false));
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
+                       U2HTS_BI_INFO_COORDINATE_ID, x_invert, false));
   // invert Y axis
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       y_invert, false));
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
+                       U2HTS_BI_INFO_COORDINATE_ID, y_invert, false));
   // swap X and Y
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       x_y_swap, false));
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
+                       U2HTS_BI_INFO_COORDINATE_ID, x_y_swap, false));
   // max touch points
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       max_tps, 0));
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
+                       U2HTS_BI_INFO_COORDINATE_ID, max_tps, 0));
   // max X coordinate
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID, x_max,
-                       0));
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
+                       U2HTS_BI_INFO_COORDINATE_ID, x_max, 0));
   // max Y coordinate
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID, y_max,
-                       0));
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
+                       U2HTS_BI_INFO_COORDINATE_ID, y_max, 0));
+  bi_decl(bi_program_feature_group(U2HTS_BI_INFO_BUS_CONFIG,
+                                   U2HTS_BI_INFO_BUS_ID, "Bus Configuration"));
   // bus type
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       bus_type, UB_I2C));
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, bus_type,
+                       UB_I2C));
   // controller i2c address
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       i2c_addr, 0x00));
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, i2c_addr,
+                       0x00));
   // override I2C speed
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
                        i2c_speed, 0x00));
   // override SPI speed
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
                        spi_speed, 0x00));
   // override SPI cpol
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       spi_cpol, 0xFF));  // default
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, spi_cpol,
+                       0xFF));  // default
   // override SPI cpha
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
-                       spi_cpha, 0xFF));  // default
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, spi_cpha,
+                       0xFF));  // default
+  bi_decl(bi_program_feature_group(
+      U2HTS_BI_INFO_MISC_CONFIG, U2HTS_BI_INFO_MISC_ID, "Misc Configuration"));
   // IRQ flag
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_MISC_CONFIG, U2HTS_BI_INFO_MISC_ID,
                        irq_type, 0));
   // Report delay
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_MISC_CONFIG, U2HTS_BI_INFO_MISC_ID,
                        report_delay, 0));
-
   // Polling mode
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_TS_CFG_TAG, U2HTS_BI_INFO_TS_CFG_ID,
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_MISC_CONFIG, U2HTS_BI_INFO_MISC_ID,
                        polling_mode, 0));
+
+  bi_decl(bi_ptr_string(U2HTS_BI_INFO_MISC_CONFIG, U2HTS_BI_INFO_MISC_ID,
+                        custom_controller_config, "",
+                        U2HTS_CUSTOM_CONFIG_STR_MAX_TOTAL_LENGTH));
 
   u2hts_config cfg = {.controller = controller,
                       .bus_type = bus_type,
-                      .i2c_addr = i2c_addr,
-                      .i2c_speed = i2c_speed,
-                      .spi_cpha = spi_cpha,
-                      .spi_cpol = spi_cpol,
-                      .spi_speed = spi_speed,
-                      .x_invert = x_invert,
-                      .y_invert = y_invert,
-                      .x_y_swap = x_y_swap,
-                      .max_tps = max_tps,
-                      .x_max = x_max,
-                      .y_max = y_max,
+                      .i2c_config =
+                          {
+                              .addr = i2c_addr,
+                              .speed_hz = i2c_speed,
+                          },
+                      .spi_config =
+                          {
+                              .cpol = spi_cpol,
+                              .cpha = spi_cpha,
+                              .speed_hz = spi_speed,
+                          },
+                      .coord_config =
+                          {
+                              .x_invert = x_invert,
+                              .y_invert = y_invert,
+                              .x_y_swap = x_y_swap,
+                              .max_tps = max_tps,
+                              .x_max = x_max,
+                              .y_max = y_max,
+                          },
                       .irq_type = irq_type,
-                      .polling_mode = polling_mode};
+                      .polling_mode = polling_mode,
+                      .custom_controller_config = custom_controller_config};
   U2HTS_ERROR_CODES ret = u2hts_init(&cfg);
   if (ret)
     while (1)
