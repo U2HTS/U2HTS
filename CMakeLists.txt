@@ -90,7 +90,6 @@ target_link_libraries(U2HTS PUBLIC
     tinyusb_device
     tinyusb_board
     u2hts_core
-    u2hts_core_settings
 )
 
 target_compile_options(U2HTS PRIVATE 
