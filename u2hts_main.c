@@ -59,21 +59,27 @@ int main() {
   // bus type
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, bus_type,
                        UB_I2C));
-  // controller i2c address
+  // override I2C config
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
+                       override_i2c_config, 0));
+  // controller I2C address
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, i2c_addr,
                        0x00));
   // override I2C speed
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
                        i2c_speed, 0x00));
+  // override SPI config
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
+                       override_spi_config, 0));
   // override SPI speed
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
                        spi_speed, 0x00));
   // override SPI cpol
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, spi_cpol,
-                       0xFF));  // default
+                       0));
   // override SPI cpha
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, spi_cpha,
-                       0xFF));  // default
+                       0));
   bi_decl(bi_program_feature_group(
       U2HTS_BI_INFO_MISC_CONFIG, U2HTS_BI_INFO_MISC_ID, "Misc Configuration"));
   // IRQ flag
@@ -92,11 +98,13 @@ int main() {
 
   u2hts_config cfg = {.controller = controller,
                       .bus_type = bus_type,
+                      .override_i2c_config = override_i2c_config,
                       .i2c_config =
                           {
                               .addr = i2c_addr,
                               .speed_hz = i2c_speed,
                           },
+                      .override_spi_config = override_spi_config,
                       .spi_config =
                           {
                               .cpol = spi_cpol,

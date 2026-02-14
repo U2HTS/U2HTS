@@ -51,7 +51,6 @@ After a idle time (~5s) system will apply new config (and save to flash if `U2HT
 | Invert Y axis | `y_invert` | 0/1 |
 | Swap X&Y axis | `x_y_swap` | 0/1 |
 | Polling mode | `polling_mode` | 0/1 |
-| I2C slave address | `i2c_addr` | 7-bit device address |
 | Report delay | `report_delay` | uint32_t, default 0 |
 | Interrupt trigger type | `irq_type` | refer [u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L108) |
 | Custom Controller Configuration | `custom_controller_config` | string, max length is 512 by default |
@@ -63,13 +62,16 @@ These values must be configured when using an controller that does NOT support a
 | X axis max | `x_max` | 65535 |
 | Y axis max | `y_max` | 65535 |
 
-Drivers will set the default values of bus configuration, but you can also override them:
+Drivers will set the default values of bus configuration, but you can also override them(**Note: Once override enabled then all config entrys in corrsponding bus config must be configured**):
 | Config | Name | Value |
 | --- | --- | --- |
-| I2C Speed | `i2c_speed` | uint32_t,0 use controller default value |
-| SPI Speed | `spi_speed` | uint32_t,0 use controller default value |
-| SPI CPHA | `spi_cpha` | 0/1, 0xFF(255) use controller default value |
-| SPI CPOL | `spi_cpol` | 0/1, 0xFF(255) use controller default value |
+| Override I2C config | `override_i2c_config` | 0/1 |
+| I2C slave address | `i2c_addr` | 7-bit device address |
+| I2C Speed | `i2c_speed` | uint32_t |
+| Override SPI config | `override_spi_config` | 0/1 |
+| SPI Speed | `spi_speed` | uint32_t |
+| SPI CPHA | `spi_cpha` | 0/1 |
+| SPI CPOL | `spi_cpol` | 0/1 |
 
 # Custom Controller Configuration
 If a controller requires additional parameters for configuration, the configuration can be written as key-value pairs into [custom_controller_config](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L197), and then retrieved within the controller driver.  

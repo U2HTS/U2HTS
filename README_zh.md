@@ -50,7 +50,6 @@
 | 反转Y轴 | `y_invert` | 0/1 |
 | 交换XY轴 | `x_y_swap` | 0/1 |
 | 轮询模式 | `polling_mode` | 0/1 |
-| I2C从机地址 | `i2c_addr` | 7位地址 |
 | 回报延时 | `report_delay` | uint32_t, 默认为0 |
 | 中断触发类型 | `irq_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L108) |
 | 自定义控制器配置 | `custom_controller_config` | 字符串, 默认最大512字节 |
@@ -62,13 +61,16 @@
 | X轴最大值 | `x_max` | 65535 |
 | Y轴最大值 | `y_max` | 65535 |
 
-通常控制器驱动会设置总线的默认参数，也可以将其覆盖: 
+通常控制器驱动会设置总线的默认参数，也可以将其覆盖(**注意：如启用覆盖则对应总线配置项均需要配置**): 
 | 配置 | 变量名 | 可选值 |
 | --- | --- | --- |
-| I2C速度 | `i2c_speed` | uint32_t, 置0则使用控制器默认值 |
-| SPI速度 | `spi_speed` | uint32_t, 置0则使用控制器默认值 |
-| SPI CPHA | `spi_cpha` | 0/1，置0xFF(255)则使用控制器默认值 |
-| SPI CPOL | `spi_cpol` | 0/1，置0xFF(255)则使用控制器默认值 |
+| 覆盖I2C配置 | `override_i2c_config` | 0/1 |
+| I2C从机地址 | `i2c_addr` | 7位地址 |
+| I2C速度 | `i2c_speed` | uint32_t |
+| 覆盖SPI配置 | `override_spi_config` | 0/1 |
+| SPI速度 | `spi_speed` | uint32_t |
+| SPI CPHA | `spi_cpha` | 0/1 |
+| SPI CPOL | `spi_cpol` | 0/1 |
 
 # 自定义控制器配置
 如果控制器需要一些额外参数进行配置，可以将配置以键值对的方式写入到[custom_controller_config](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L197)中，再在控制器驱动中获取该配置项。  

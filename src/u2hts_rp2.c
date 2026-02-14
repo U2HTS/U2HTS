@@ -30,7 +30,7 @@ inline void u2hts_i2c_init(uint32_t speed_hz) {
 }
 
 // not implemented
-inline void u2hts_spi_init(bool cpol, bool cpha, uint32_t speed_hz) {}
+inline void u2hts_spi_init(u2hts_spi_config *config) {}
 
 inline bool u2hts_spi_transfer(void* buf, size_t len) { return false; }
 
