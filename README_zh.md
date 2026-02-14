@@ -76,7 +76,7 @@
 如果控制器需要一些额外参数进行配置，可以将配置以键值对的方式写入到[custom_controller_config](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L197)中，再在控制器驱动中获取该配置项。  
 配置格式为`xxx.yyy=zzz`，多个配置项使用空格分开，如`aaa.bbb=ccc foo.bar=yum`。  
 在[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L38)处定义了`custom_controller_config`的最大长度和最大键长度。  
-查看[dummy_test.c](https://github.com/U2HTS/u2hts_touch_controller/blob/main/dummy_test.h#L28)来获取实际使用案例。
+查看[dummy_test.c](https://github.com/U2HTS/u2hts_touch_controllers/blob/main/dummy_test.c#L27)来获取实际使用案例。
 
 # 移植
 | MCU | 按键配置 | 保存配置 | LED | 

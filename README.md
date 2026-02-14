@@ -77,7 +77,7 @@ Drivers will set the default values of bus configuration, but you can also overr
 If a controller requires additional parameters for configuration, the configuration can be written as key-value pairs into [custom_controller_config](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L197), and then retrieved within the controller driver.  
 The configuration format is `xxx.yyy=zzz`, with multiple configuration items separated by spaces, such as `aaa.bbb=ccc foo.bar=yum`.  
 The maximum length of `custom_controller_config` and the maximum key length are defined in [u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L38).  
-See [dummy_test.c](https://github.com/U2HTS/u2hts_touch_controller/blob/main/dummy_test.c#L28) for examples.  
+See [dummy_test.c](https://github.com/U2HTS/u2hts_touch_controllers/blob/main/dummy_test.c#L27) for examples.  
 
 # Ports
 | MCU | Key | Persistent config | LED | 
