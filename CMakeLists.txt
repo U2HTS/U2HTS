@@ -40,6 +40,7 @@ target_compile_definitions(u2hts_core_settings INTERFACE
     U2HTS_ENABLE_PERSISTENT_CONFIG
     U2HTS_ENABLE_KEY
     U2HTS_CONFIG_TIMEOUT=5000
+    # U2HTS_ENABLE_COMPACT_REPORT
 )
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)

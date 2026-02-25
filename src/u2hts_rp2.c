@@ -120,8 +120,8 @@ static const uint8_t u2hts_hid_report_desc[] = {
     HID_COLLECTION(HID_COLLECTION_APPLICATION),
     HID_REPORT_ID(U2HTS_HID_REPORT_TP_ID)
       HID_USAGE(0x22), 
-      HID_PHYSICAL_MIN(0),
-      HID_LOGICAL_MIN(0), 
+      0x34, // HID_PHYSICAL_MIN(0),
+      0x14, // HID_LOGICAL_MIN(0), 
       HID_UNIT_EXPONENT(0x0e), 
       HID_UNIT(0x11),
       // 10 points
