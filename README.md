@@ -85,6 +85,7 @@ See [dummy_test.c](https://github.com/U2HTS/u2hts_touch_controllers/blob/main/du
 | RP2040/RP2350 | Y | Y | Y |
 | [STM32F070F6](https://github.com/U2HTS/U2HTS_F070F6) | Y | Y | Y |
 | CH32X033F8 | Y | Y | Y |
+| [CH32V003J4M6](https://github.com/U2HTS/U2HTS_V003J4) | N | N | N |
 
 # RP2 Circuit
 `u2hts_rp2.h`: 
