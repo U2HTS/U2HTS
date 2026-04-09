@@ -7,7 +7,7 @@
 - 支持I2C与SPI总线
 - 支持检测控制器
 - 支持配置触摸屏方向
-- 支持自动获取控制器参数(需要控制器支持)
+- 支持读取控制器参数
 - 支持按键动态切换配置
 - 支持LED灯指示系统状态
 - 支持持久化保存配置
@@ -45,27 +45,29 @@
 | 配置 | 变量名 | 可选值 |
 | --- | --- | --- |
 | 控制器名 | `controller` | 参考`触摸控制器`一节 |
-| 总线类型 | `bus_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L115), 默认为`UB_I2C` |
+| 总线类型 | `bus_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h), 默认为`UB_I2C` |
 | 反转X轴 | `x_invert` | 0/1 |
 | 反转Y轴 | `y_invert` | 0/1 |
+| X轴偏移量 | `x_offset` | -32768-32767 |
+| Y轴偏移量 | `y_offset` | -32768-32767 |
 | 交换XY轴 | `x_y_swap` | 0/1 |
 | 轮询模式 | `polling_mode` | 0/1 |
 | 回报延时 | `report_delay` | uint32_t, 默认为0 |
-| 中断触发类型 | `irq_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L108) |
+| 中断触发类型 | `irq_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h) |
 | 自定义控制器配置 | `custom_controller_config` | 字符串, 默认最大512字节 |
 
-如果控制器不支持自动配置，则必须配置以下参数：
+如果控制器不支持读取配置，则必须配置以下参数：
 | 配置 | 变量名 | 可选值 |
 | --- | --- | --- |
 | 最大触摸点数 | `max_tps` | 最大为10 |
 | X轴最大值 | `x_max` | 65535 |
 | Y轴最大值 | `y_max` | 65535 |
 
-通常控制器驱动会设置总线的默认参数，也可以将其覆盖(**注意：如启用覆盖则对应总线配置项均需要配置**): 
+通常控制器驱动会设置总线的默认参数，也可以将其覆盖(**注意：如启用覆盖则对应总线所有配置项均需要配置**): 
 | 配置 | 变量名 | 可选值 |
 | --- | --- | --- |
 | 覆盖I2C配置 | `override_i2c_config` | 0/1 |
-| I2C从机地址 | `i2c_addr` | 7位地址 |
+| I2C从机地址 | `primary_i2c_addr` | 7位地址 |
 | I2C速度 | `i2c_speed` | uint32_t |
 | 覆盖SPI配置 | `override_spi_config` | 0/1 |
 | SPI速度 | `spi_speed` | uint32_t |

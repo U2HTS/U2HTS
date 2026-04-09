@@ -8,7 +8,7 @@ USB HID multitouch touchscreen based on Raspberry Pi RP2 MCUs.
 - Support I2C & SPI buses
 - Support detect touch controller
 - Support change touchscreen orientation
-- Support automatically configure touchscreen parameters(need controller support)
+- Support read touch controller configuration
 - Support switch config in runtime via key
 - Support indicates system status by LED patterns
 - Support persistent config
@@ -50,12 +50,14 @@ After a idle time (~5s) system will apply new config (and save to flash if `U2HT
 | Invert X axis | `x_invert` | 0/1 |
 | Invert Y axis | `y_invert` | 0/1 |
 | Swap X&Y axis | `x_y_swap` | 0/1 |
+| X coordinate offset | `x_offset` | -32768-32767 |
+| Y coordinate offset | `y_offset` | -32768-32767 |
 | Polling mode | `polling_mode` | 0/1 |
 | Report delay | `report_delay` | uint32_t, default 0 |
 | Interrupt trigger type | `irq_type` | refer [u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h#L108) |
 | Custom Controller Configuration | `custom_controller_config` | string, max length is 512 by default |
  
-These values must be configured when using an controller that does NOT support auto-config:
+These values must be configured when using an controller that does NOT support read config:
 | Config | Name | Value |
 | --- | --- | --- |
 | Max touch points | `max_tps` | up to 10 |

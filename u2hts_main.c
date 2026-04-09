@@ -54,6 +54,13 @@ int main() {
   // max Y coordinate
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
                        U2HTS_BI_INFO_COORDINATE_ID, y_max, 0));
+  // X offset
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
+                       U2HTS_BI_INFO_COORDINATE_ID, x_offset, 0));
+  // Y offset
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
+                       U2HTS_BI_INFO_COORDINATE_ID, y_offset, 0));
+
   bi_decl(bi_program_feature_group(U2HTS_BI_INFO_BUS_CONFIG,
                                    U2HTS_BI_INFO_BUS_ID, "Bus Configuration"));
   // bus type
@@ -62,8 +69,8 @@ int main() {
   // override I2C config
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
                        override_i2c_config, 0));
-  // controller I2C address
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, i2c_addr,
+  // controller primary I2C address
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, primary_i2c_addr,
                        0x00));
   // override I2C speed
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
@@ -101,7 +108,7 @@ int main() {
                       .override_i2c_config = override_i2c_config,
                       .i2c_config =
                           {
-                              .addr = i2c_addr,
+                              .primary_addr = primary_i2c_addr,
                               .speed_hz = i2c_speed,
                           },
                       .override_spi_config = override_spi_config,
@@ -119,6 +126,8 @@ int main() {
                               .max_tps = max_tps,
                               .x_max = x_max,
                               .y_max = y_max,
+                              .x_offset = x_offset,
+                              .y_offset = y_offset,
                           },
                       .irq_type = irq_type,
                       .polling_mode = polling_mode,
