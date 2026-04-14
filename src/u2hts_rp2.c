@@ -328,9 +328,8 @@ inline void u2hts_ts_irq_init(U2HTS_IRQ_TYPES irq_type) {
                                      u2hts_rp2_irq_cb);
 }
 
-inline void u2hts_usb_report(uint8_t report_id,
-                             const u2hts_hid_report* report) {
-  tud_hid_report(report_id, report, sizeof(u2hts_hid_report));
+inline void u2hts_usb_report(const u2hts_hid_report* report) {
+  tud_hid_report(0, report, sizeof(u2hts_hid_report));
   u2hts_usb_status = false;
 }
 
