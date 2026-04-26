@@ -104,8 +104,8 @@ static const tusb_desc_device_t u2hts_device_desc = {
     .bDeviceProtocol = 0x00,
     .bMaxPacketSize0 = CFG_TUD_ENDPOINT0_SIZE,
 
-    .idVendor = 0x2e8a,   // Raspberry Pi
-    .idProduct = 0x8572,  // UH in ascii
+    .idVendor = 0x2e8a,  // Raspberry Pi
+    .idProduct = U2HTS_USB_PID,
     .bcdDevice = 0x0100,
 
     .iManufacturer = 0x01,
@@ -184,8 +184,8 @@ static const uint8_t u2hts_config_desc[] = {
 static uint8_t const* string_desc_arr[] = {
     (const uint8_t[]){0x09,
                       0x04},  // 0: is supported language is English (0x0409)
-    (const uint8_t*)"U2HTS",  // 1: Manufacturer
-    (const uint8_t*)"USB to HID Touchscreen",  // 2: Product
+    (const uint8_t*)U2HTS_MANU_STR,  // 1: Manufacturer
+    (const uint8_t*)U2HTS_PROD_STR,  // 2: Product
     NULL,  // 3: Serials will use unique ID if possible
 };
 
