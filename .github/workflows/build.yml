@@ -5,11 +5,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  PICO_SDK_FETCH_FROM_GIT: 1
-  PICO_SDK_FETCH_FROM_GIT_TAG: 2.2.0
-  PICO_SDK_FETCH_FROM_GIT_PATH: pico-sdk
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,27 +15,28 @@ jobs:
       with:
         submodules: recursive
     
-    - name: install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-arm-none-eabi libnewlib-dev libnewlib-arm-none-eabi ninja-build cmake
-    
     - name: build for Pico
-      run: |
-        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico
-        cmake --build build
-        mv build/U2HTS.uf2 U2HTS_pico.uf2
-
+      id: build4pico
+      uses: samyarsadat/Pico-Build-Action@v1
+      with:
+        source_dir: "."
+        cmake_args: "-DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico"
+        
+    - name: upload Pico firmware
+      uses: actions/upload-artifact@v7
+      with:
+          name: ${{ github.event.repository.name }}_Pico-${{ github.run_id }}
+          path: ${{steps.build4pico.outputs.output_dir}}
+    
     - name: build for Pico2
-      run: |
-        cmake --fresh -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico2
-        cmake --build build
-        mv build/U2HTS.uf2 U2HTS_pico2.uf2
+      id: build4pico2
+      uses: samyarsadat/Pico-Build-Action@v1
+      with:
+        source_dir: "."
+        cmake_args: "-DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico2"
 
     - name: Upload firmware
       uses: actions/upload-artifact@v7
       with:
-        name: ${{ github.event.repository.name }}_RP2-${{ github.run_id }}
-        path: |
-          U2HTS_pico.uf2
-          U2HTS_pico2.uf2
+        name: ${{ github.event.repository.name }}_Pico2-${{ github.run_id }}
+        path: ${{steps.build4pico2.outputs.output_dir}}
