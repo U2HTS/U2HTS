@@ -2,7 +2,11 @@ name: build firmware
 
 on:
   push:
-  pull_request:
+    paths-ignore: 
+      - ".gitignore"
+      - "LICENSE"
+      - "README.md"
+      - "README_zh.md"
   workflow_dispatch:
 
 jobs:
