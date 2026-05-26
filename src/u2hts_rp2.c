@@ -330,6 +330,8 @@ inline void u2hts_ts_irq_init(U2HTS_IRQ_TYPES irq_type) {
 }
 
 inline void u2hts_usb_report(const u2hts_hid_report* report) {
+  static_assert(sizeof(u2hts_hid_report) < CFG_TUD_HID_EP_BUFSIZE,
+                "u2hts_hid_report is oversized!");
   tud_hid_report(0, report, sizeof(u2hts_hid_report));
   u2hts_usb_status = false;
 }

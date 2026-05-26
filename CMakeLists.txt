@@ -33,18 +33,16 @@ project(U2HTS C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-add_library(u2hts_core_settings INTERFACE)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)
+
 target_compile_definitions(u2hts_core_settings INTERFACE
     U2HTS_LOG_LEVEL=U2HTS_LOG_LEVEL_INFO
-    U2HTS_MAX_TPS=10
     U2HTS_ENABLE_LED
     # U2HTS_ENABLE_PERSISTENT_CONFIG
     # U2HTS_ENABLE_KEY
     U2HTS_CONFIG_TIMEOUT=5000
     # U2HTS_ENABLE_COMPACT_REPORT
 )
-
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)
 
 set(TOUCH_CONTROLLERS
     ${CMAKE_CURRENT_LIST_DIR}/u2hts_touch_controllers/gt9xx.c
