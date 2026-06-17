@@ -35,6 +35,12 @@ pico_sdk_init()
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)
 
+# Default hid report descriptor contains 10 touch points
+# Below is an example of how to override it with 5 touch points.
+
+# set(U2HTS_MAX_TPS 5)
+# u2hts_generate_hid_report_descriptor()
+
 target_compile_definitions(u2hts_core_settings INTERFACE
     U2HTS_LOG_LEVEL=U2HTS_LOG_LEVEL_INFO
     U2HTS_ENABLE_LED

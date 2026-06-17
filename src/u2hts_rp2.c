@@ -8,7 +8,7 @@
 #include "u2hts_rp2.h"
 
 #include "u2hts_core.h"
-#include "u2hts_report_descriptor.h"
+#include "u2hts_hid_report_descriptor.h"
 
 inline bool u2hts_i2c_write(uint8_t slave_addr, void* buf, size_t len,
                             bool stop) {
