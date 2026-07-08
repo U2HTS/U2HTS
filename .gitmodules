@@ -4,3 +4,6 @@
 [submodule "u2hts_touch_controllers"]
 	path = u2hts_touch_controllers
 	url = https://github.com/U2HTS/u2hts_touch_controllers.git
+[submodule "FreeRTOS-Kernel"]
+	path = FreeRTOS-Kernel
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel

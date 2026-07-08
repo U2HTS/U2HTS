@@ -30,10 +30,34 @@ include(pico_sdk_import.cmake)
 
 project(U2HTS C CXX ASM)
 
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)
+
+set(U2HTS_ENABLE_FREERTOS OFF CACHE BOOL "Enable FreeRTOS support")
+
+if(U2HTS_ENABLE_FREERTOS)
+    include(${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
+    add_library(freertos INTERFACE)
+    target_include_directories(freertos INTERFACE 
+        ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/include
+        ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2040/include
+        ${CMAKE_CURRENT_LIST_DIR}/include
+    )
+
+    target_link_libraries(freertos INTERFACE 
+        pico_async_context_freertos
+        FreeRTOS-Kernel-Static
+    )
+
+    target_compile_definitions(freertos INTERFACE
+        U2HTS_ENABLE_FREERTOS
+    )
+    target_link_libraries(u2hts_core_settings INTERFACE freertos)
+
+    set(TINYUSB_OPT_OS OPT_OS_FREERTOS)
+endif()
+
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
-
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)
 
 # Default hid report descriptor contains 10 touch points
 # Below is an example of how to override it with 5 touch points.

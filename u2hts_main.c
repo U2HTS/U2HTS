@@ -21,6 +21,22 @@
 #define U2HTS_BI_INFO_MISC_CONFIG 0x0003
 #define U2HTS_BI_INFO_MISC_ID 0x0000
 
+#ifdef U2HTS_ENABLE_FREERTOS
+
+#define U2HTS_BRINGUP_TASK_STACK_SIZE 256
+
+static StackType_t u2hts_bringup_task_stack[U2HTS_BRINGUP_TASK_STACK_SIZE] = {
+    0};
+static StaticTask_t u2hts_bringup_task_tcb = {0};
+
+static void u2hts_bringup_task(void* pvParameters) {
+  U2HTS_ERROR_CODES ret = u2hts_init((u2hts_config*)pvParameters);
+  if (ret)
+    while (1) u2hts_led_show_error_code(ret);
+  while (1) tud_task();
+}
+#endif
+
 int main() {
   stdio_init_all();
   u2hts_pins_init();
@@ -47,13 +63,13 @@ int main() {
                        U2HTS_BI_INFO_COORDINATE_ID, x_y_swap, false));
   // max touch points
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
-                       U2HTS_BI_INFO_COORDINATE_ID, max_tps, 0));
+                       U2HTS_BI_INFO_COORDINATE_ID, max_tps, 5));
   // max X coordinate
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
-                       U2HTS_BI_INFO_COORDINATE_ID, x_max, 0));
+                       U2HTS_BI_INFO_COORDINATE_ID, x_max, 480));
   // max Y coordinate
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
-                       U2HTS_BI_INFO_COORDINATE_ID, y_max, 0));
+                       U2HTS_BI_INFO_COORDINATE_ID, y_max, 800));
   // X offset
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
                        U2HTS_BI_INFO_COORDINATE_ID, x_offset, 0));
@@ -70,8 +86,8 @@ int main() {
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
                        override_i2c_config, 0));
   // controller primary I2C address
-  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
-                       primary_i2c_addr, 0x00));
+  bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID, i2c_addr,
+                       0x00));
   // override I2C speed
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_BUS_CONFIG, U2HTS_BI_INFO_BUS_ID,
                        i2c_speed, 0x00));
@@ -113,7 +129,7 @@ int main() {
                       .override_i2c_config = override_i2c_config,
                       .i2c_config =
                           {
-                              .primary_addr = primary_i2c_addr,
+                              .primary_addr = i2c_addr,
                               .speed_hz = i2c_speed,
                           },
                       .override_spi_config = override_spi_config,
@@ -137,6 +153,14 @@ int main() {
                       .irq_type = irq_type,
                       .polling_mode = polling_mode,
                       .custom_controller_config = custom_controller_config};
+#ifdef U2HTS_ENABLE_FREERTOS
+  xTaskCreateStatic(u2hts_bringup_task, "u2hts_bringup_task",
+                    U2HTS_BRINGUP_TASK_STACK_SIZE, (void*)&cfg,
+                    tskIDLE_PRIORITY + 3, u2hts_bringup_task_stack,
+                    &u2hts_bringup_task_tcb);
+  vTaskStartScheduler();
+#else
+
   U2HTS_ERROR_CODES ret = u2hts_init(&cfg);
   if (ret)
     while (1) u2hts_led_show_error_code(ret);
@@ -144,4 +168,5 @@ int main() {
     tud_task();
     u2hts_task();
   }
+#endif
 }

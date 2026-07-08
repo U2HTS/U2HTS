@@ -143,3 +143,9 @@ cd U2HTS
 PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.3.0 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel
 cmake --build build
 ```
+# RP2 FreeRTOS
+*Note：RP2 FreeRTOS support is experimental.*
+```bash
+PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.3.0 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DU2HTS_ENABLE_FREERTOS=ON
+cmake --build build
+```

@@ -49,7 +49,10 @@ inline void u2hts_i2c_set_speed(uint32_t speed_hz) {
   i2c_set_baudrate(U2HTS_I2C, speed_hz);
 }
 
+#ifndef U2HTS_ENABLE_FREERTOS
 inline void u2hts_delay_ms(uint32_t ms) { sleep_ms(ms); }
+#endif
+
 inline void u2hts_delay_us(uint32_t us) { sleep_us(us); }
 
 inline void u2hts_usb_init() { tud_init(BOARD_TUD_RHPORT); }
