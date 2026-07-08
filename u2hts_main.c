@@ -139,10 +139,7 @@ int main() {
                       .custom_controller_config = custom_controller_config};
   U2HTS_ERROR_CODES ret = u2hts_init(&cfg);
   if (ret)
-    while (1)
-#ifdef U2HTS_ENABLE_LED
-      u2hts_led_show_error_code(ret);
-#endif
+    while (1) u2hts_led_show_error_code(ret);
   while (1) {
     tud_task();
     u2hts_task();

@@ -58,8 +58,11 @@ inline uint16_t u2hts_get_timestamp() {
   return (uint16_t)(to_us_since_boot(time_us_64()) / 100);
 }
 
+#ifdef U2HTS_ENABLE_LED
 inline void u2hts_led_set(bool on) { gpio_put(PICO_DEFAULT_LED_PIN, on); }
+#endif
 
+#ifdef U2HTS_ENABLE_PERSISTENT_CONFIG
 static void u2hts_rp2_flash_erase(void* param) {
   (void)param;
   flash_range_erase(U2HTS_CONFIG_STORAGE_OFFSET, FLASH_SECTOR_SIZE);
@@ -81,8 +84,11 @@ inline void u2hts_write_config(uint16_t cfg) {
 inline uint16_t u2hts_read_config() {
   return *(uint16_t*)(XIP_BASE + U2HTS_CONFIG_STORAGE_OFFSET);
 }
+#endif
 
+#ifdef U2HTS_ENABLE_KEY
 inline bool u2hts_usrkey_get() { return gpio_get(U2HTS_USR_KEY); }
+#endif
 
 inline void u2hts_tpint_set_mode(bool mode, bool pull) {
   gpio_deinit(U2HTS_TP_INT);
