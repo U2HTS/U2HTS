@@ -50,6 +50,8 @@ if(U2HTS_ENABLE_FREERTOS)
 
     target_compile_definitions(freertos INTERFACE
         U2HTS_ENABLE_FREERTOS
+        # U2HTS_ENABLE_PERSISTENT_CONFIG requires this
+        PICO_FLASH_ASSUME_CORE1_SAFE
     )
     target_link_libraries(u2hts_core_settings INTERFACE freertos)
 

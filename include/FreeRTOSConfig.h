@@ -46,8 +46,8 @@
 #define configUSE_IDLE_HOOK                     0
 #define configUSE_TICK_HOOK                     0
 #define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
-#define configMAX_PRIORITIES                    32
-#define configMINIMAL_STACK_SIZE                ( configSTACK_DEPTH_TYPE ) 512 
+#define configMAX_PRIORITIES                    8
+#define configMINIMAL_STACK_SIZE                ( configSTACK_DEPTH_TYPE ) 32 
 #define configUSE_16_BIT_TICKS                  0
 
 #define configIDLE_SHOULD_YIELD                 1
@@ -56,9 +56,9 @@
 #define configUSE_MUTEXES                       1
 #define configUSE_RECURSIVE_MUTEXES             1
 #define configUSE_APPLICATION_TASK_TAG          0
-#define configUSE_COUNTING_SEMAPHORES           1
+#define configUSE_COUNTING_SEMAPHORES           0
 #define configQUEUE_REGISTRY_SIZE               8
-#define configUSE_QUEUE_SETS                    1
+#define configUSE_QUEUE_SETS                    0
 #define configUSE_TIME_SLICING                  1
 #define configUSE_NEWLIB_REENTRANT              0
 // todo need this for lwip FreeRTOS sys_arch to compile
@@ -93,7 +93,7 @@
 #define configUSE_TIMERS                        1
 #define configTIMER_TASK_PRIORITY               ( configMAX_PRIORITIES - 1 )
 #define configTIMER_QUEUE_LENGTH                10
-#define configTIMER_TASK_STACK_DEPTH            1024
+#define configTIMER_TASK_STACK_DEPTH            32
 
 #define configRECORD_STACK_HIGH_ADDRESS 1
 

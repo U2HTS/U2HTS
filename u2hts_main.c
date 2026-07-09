@@ -63,13 +63,13 @@ int main() {
                        U2HTS_BI_INFO_COORDINATE_ID, x_y_swap, false));
   // max touch points
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
-                       U2HTS_BI_INFO_COORDINATE_ID, max_tps, 5));
+                       U2HTS_BI_INFO_COORDINATE_ID, max_tps, 0));
   // max X coordinate
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
-                       U2HTS_BI_INFO_COORDINATE_ID, x_max, 480));
+                       U2HTS_BI_INFO_COORDINATE_ID, x_max, 0));
   // max Y coordinate
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
-                       U2HTS_BI_INFO_COORDINATE_ID, y_max, 800));
+                       U2HTS_BI_INFO_COORDINATE_ID, y_max, 0));
   // X offset
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_COORDINATE_CONFIG,
                        U2HTS_BI_INFO_COORDINATE_ID, x_offset, 0));
