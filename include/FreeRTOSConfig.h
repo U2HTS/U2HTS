@@ -47,7 +47,7 @@
 #define configUSE_TICK_HOOK                     0
 #define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES                    8
-#define configMINIMAL_STACK_SIZE                ( configSTACK_DEPTH_TYPE ) 32 
+#define configMINIMAL_STACK_SIZE                ( configSTACK_DEPTH_TYPE ) 256 
 #define configUSE_16_BIT_TICKS                  0
 
 #define configIDLE_SHOULD_YIELD                 1
@@ -93,7 +93,7 @@
 #define configUSE_TIMERS                        1
 #define configTIMER_TASK_PRIORITY               ( configMAX_PRIORITIES - 1 )
 #define configTIMER_QUEUE_LENGTH                10
-#define configTIMER_TASK_STACK_DEPTH            32
+#define configTIMER_TASK_STACK_DEPTH            128
 
 #define configRECORD_STACK_HIGH_ADDRESS 1
 
