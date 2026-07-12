@@ -16,7 +16,7 @@ else()
     set(USERHOME $ENV{HOME})
 endif()
 set(sdkVersion 2.3.0)
-set(toolchainVersion 14_2_Rel1)
+set(toolchainVersion 15_2_Rel1)
 set(picotoolVersion 2.3.0)
 set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
 if (EXISTS ${picoVscode})
@@ -144,13 +144,6 @@ target_compile_options(U2HTS PRIVATE
     -Wno-format
 )
 
-if(PICO_PLATFORM MATCHES "rp2350")
-    pico_set_linker_script(U2HTS ${CMAKE_CURRENT_LIST_DIR}/memmap_rp2350.ld)
-elseif(PICO_PLATFORM MATCHES "rp2040")
-    pico_set_linker_script(U2HTS ${CMAKE_CURRENT_LIST_DIR}/memmap_rp2040.ld)
-else()
-    message(Unknown platform: ${PICO_PLATFORM})
-endif()
-
+pico_add_linker_script_override_path(U2HTS ${CMAKE_CURRENT_LIST_DIR}/linker)
 pico_add_extra_outputs(U2HTS)
 pico_set_program_url(U2HTS "https://github.com/U2HTS/U2HTS")

@@ -1,0 +1,9 @@
+SECTIONS
+{
+    .u2hts_touch_controllers (READONLY): {
+        __u2hts_touch_controllers_begin = .;
+        KEEP(*(SORT(.u2hts_touch_controllers*)))
+        . = ALIGN(4);
+        __u2hts_touch_controllers_end = .;
+    } > FLASH
+}
