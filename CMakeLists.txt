@@ -38,8 +38,7 @@ if(U2HTS_ENABLE_FREERTOS)
     include(${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
     add_library(freertos INTERFACE)
     target_include_directories(freertos INTERFACE 
-        ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/include
-        ${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2040/include
+        # FreeRTOSConfig.h location
         ${CMAKE_CURRENT_LIST_DIR}/include
     )
 
