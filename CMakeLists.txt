@@ -52,7 +52,7 @@ if(U2HTS_ENABLE_FREERTOS)
         # U2HTS_ENABLE_PERSISTENT_CONFIG requires this
         PICO_FLASH_ASSUME_CORE1_SAFE
     )
-    target_link_libraries(u2hts_core_settings INTERFACE freertos)
+    target_link_libraries(u2hts_core_config INTERFACE freertos)
 
     set(TINYUSB_OPT_OS OPT_OS_FREERTOS)
 endif()
@@ -66,7 +66,7 @@ pico_sdk_init()
 # set(U2HTS_MAX_TPS 5)
 # u2hts_generate_hid_report_descriptor()
 
-target_compile_definitions(u2hts_core_settings INTERFACE
+target_compile_definitions(u2hts_core_config INTERFACE
     U2HTS_LOG_LEVEL=U2HTS_LOG_LEVEL_INFO
     U2HTS_ENABLE_LED
     # U2HTS_ENABLE_PERSISTENT_CONFIG

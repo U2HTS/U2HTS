@@ -51,15 +51,14 @@ inline void u2hts_i2c_set_speed(uint32_t speed_hz) {
 
 #ifndef U2HTS_ENABLE_FREERTOS
 inline void u2hts_delay_ms(uint32_t ms) { sleep_ms(ms); }
+inline uint16_t u2hts_get_timestamp() {
+  return (uint16_t)(to_us_since_boot(time_us_64()) / 100);
+}
 #endif
 
 inline void u2hts_delay_us(uint32_t us) { sleep_us(us); }
 
 inline void u2hts_usb_init() { tud_init(BOARD_TUD_RHPORT); }
-
-inline uint16_t u2hts_get_timestamp() {
-  return (uint16_t)(to_us_since_boot(time_us_64()) / 100);
-}
 
 #ifdef U2HTS_ENABLE_LED
 inline void u2hts_led_set(bool on) { gpio_put(PICO_DEFAULT_LED_PIN, on); }
