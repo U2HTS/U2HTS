@@ -156,7 +156,7 @@ int main() {
 #ifdef U2HTS_ENABLE_FREERTOS
   xTaskCreateStatic(u2hts_bringup_task, "u2hts_bringup_task",
                     U2HTS_BRINGUP_TASK_STACK_SIZE, (void*)&cfg,
-                    tskIDLE_PRIORITY + 3, u2hts_bringup_task_stack,
+                    U2HTS_TOUCH_TASK_PRIORITY + 1, u2hts_bringup_task_stack,
                     &u2hts_bringup_task_tcb);
   vTaskStartScheduler();
 #else
