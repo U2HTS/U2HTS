@@ -21,7 +21,7 @@
 #define U2HTS_BI_INFO_MISC_CONFIG 0x0003
 #define U2HTS_BI_INFO_MISC_ID 0x0000
 
-#ifdef U2HTS_ENABLE_FREERTOS
+#if U2HTS_ENABLE_FREERTOS
 
 #define U2HTS_BRINGUP_TASK_STACK_SIZE 256
 
@@ -153,7 +153,7 @@ int main() {
                       .irq_type = irq_type,
                       .polling_mode = polling_mode,
                       .custom_controller_config = custom_controller_config};
-#ifdef U2HTS_ENABLE_FREERTOS
+#if U2HTS_ENABLE_FREERTOS
   xTaskCreateStatic(u2hts_bringup_task, "u2hts_bringup_task",
                     U2HTS_BRINGUP_TASK_STACK_SIZE, (void*)&cfg,
                     U2HTS_TOUCH_TASK_PRIORITY + 1, u2hts_bringup_task_stack,

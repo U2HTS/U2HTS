@@ -38,25 +38,25 @@ jobs:
 
     - name: Build for Pico
       run: |
-        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico -DU2HTS_ENABLE_LED=ON
         cmake --build build
         mv build/U2HTS.uf2 U2HTS_pico.uf2
 
     - name: Build for Pico2
       run: |
-        cmake --fresh -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico2
+        cmake --fresh -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico2 -DU2HTS_ENABLE_LED=ON
         cmake --build build
         mv build/U2HTS.uf2 U2HTS_pico2.uf2
 
     - name: Build for Pico (FreeRTOS)
       run: |
-        cmake --fresh -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico -DU2HTS_ENABLE_FREERTOS=ON
+        cmake --fresh -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico -DU2HTS_ENABLE_LED=ON -DU2HTS_ENABLE_FREERTOS=ON
         cmake --build build
         mv build/U2HTS.uf2 U2HTS_pico_freertos.uf2
 
     - name: Build for Pico2 (FreeRTOS)
       run: |
-        cmake --fresh -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico2 -DU2HTS_ENABLE_FREERTOS=ON
+        cmake --fresh -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DPICO_BOARD=pico2 -DU2HTS_ENABLE_LED=ON -DU2HTS_ENABLE_FREERTOS=ON
         cmake --build build
         mv build/U2HTS.uf2 U2HTS_pico2_freertos.uf2
 
