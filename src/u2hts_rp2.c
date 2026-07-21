@@ -124,6 +124,8 @@ static const tusb_desc_device_t u2hts_device_desc = {
     .bNumConfigurations = 0x01};
 // clang-format off
 static const uint8_t u2hts_hid_report_desc[] = {
+  U2HTS_HID_REPORT_DESCRIPTOR
+#if 0
     HID_USAGE_PAGE(HID_USAGE_PAGE_DIGITIZER), 
     HID_USAGE(0x04),
     HID_COLLECTION(HID_COLLECTION_APPLICATION),
@@ -148,13 +150,16 @@ static const uint8_t u2hts_hid_report_desc[] = {
       U2HTS_HID_TP_MAX_COUNT_DESC(U2HTS_HID_REPORT_TP_MAX_COUNT_ID),
       U2HTS_HID_TP_MS_THQA_CERT_DESC(U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID),
     HID_COLLECTION_END,
+#endif
 };
 // clang-format on
 
 // see
 // https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/touchscreen-required-hid-top-level-collections
 // "Device Certification Status Feature Report" section
-static const uint8_t u2hts_ms_thqa_cert[256] = {
+static const uint8_t u2hts_ms_thqa_cert[] = {U2HTS_MS_THQA_CERT
+#if 0
+    U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID, 
     0xfc, 0x28, 0xfe, 0x84, 0x40, 0xcb, 0x9a, 0x87, 0x0d, 0xbe, 0x57, 0x3c,
     0xb6, 0x70, 0x09, 0x88, 0x07, 0x97, 0x2d, 0x2b, 0xe3, 0x38, 0x34, 0xb6,
     0x6c, 0xed, 0xb0, 0xf7, 0xe5, 0x9c, 0xf6, 0xc2, 0x2e, 0x84, 0x1b, 0xe8,
@@ -176,7 +181,9 @@ static const uint8_t u2hts_ms_thqa_cert[256] = {
     0x5a, 0xc5, 0xd3, 0x7d, 0x98, 0xbe, 0x31, 0x48, 0x1f, 0xfb, 0xda, 0xaf,
     0xa2, 0xa8, 0x6a, 0x89, 0xd6, 0xbf, 0xf2, 0xd3, 0x32, 0x2a, 0x9a, 0xe4,
     0xcf, 0x17, 0xb7, 0xb8, 0xf4, 0xe1, 0x33, 0x08, 0x24, 0x8b, 0xc4, 0x43,
-    0xa5, 0xe5, 0x24, 0xc2};
+    0xa5, 0xe5, 0x24, 0xc2
+#endif
+};
 
 static uint16_t _desc_str[32 + 1] = {0};
 
@@ -288,7 +295,7 @@ inline uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
         buffer[0] = u2hts_get_max_tps();
         break;
       case U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID:
-        memcpy(buffer, u2hts_ms_thqa_cert, reqlen);
+        memcpy(buffer, u2hts_ms_thqa_cert + 1 /* ignore report id */, reqlen);
         u2hts_usb_status = true;
         break;
       default:
