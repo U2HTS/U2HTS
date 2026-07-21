@@ -49,7 +49,7 @@ inline void u2hts_i2c_set_speed(uint32_t speed_hz) {
   i2c_set_baudrate(U2HTS_I2C, speed_hz);
 }
 
-#if !U2HTS_ENABLE_FREERTOS
+#ifndef U2HTS_ENABLE_FREERTOS
 inline void u2hts_delay_ms(uint32_t ms) { sleep_ms(ms); }
 inline uint16_t u2hts_get_timestamp() {
   return (uint16_t)(to_us_since_boot(time_us_64()) / 100);
@@ -60,11 +60,11 @@ inline void u2hts_delay_us(uint32_t us) { sleep_us(us); }
 
 inline void u2hts_usb_init() { tud_init(BOARD_TUD_RHPORT); }
 
-#if U2HTS_ENABLE_LED
+#ifdef U2HTS_ENABLE_LED
 inline void u2hts_led_set(bool on) { gpio_put(PICO_DEFAULT_LED_PIN, on); }
 #endif
 
-#if U2HTS_ENABLE_PERSISTENT_CONFIG
+#ifdef U2HTS_ENABLE_PERSISTENT_CONFIG
 static void u2hts_rp2_flash_erase(void* param) {
   (void)param;
   flash_range_erase(U2HTS_CONFIG_STORAGE_OFFSET, FLASH_SECTOR_SIZE);
@@ -88,7 +88,7 @@ inline uint16_t u2hts_read_config() {
 }
 #endif
 
-#if U2HTS_ENABLE_KEY
+#ifdef U2HTS_ENABLE_KEY
 inline bool u2hts_usrkey_get() { return gpio_get(U2HTS_USR_KEY); }
 #endif
 
