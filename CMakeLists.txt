@@ -32,8 +32,6 @@ project(U2HTS C CXX ASM)
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)
 
-set(U2HTS_ENABLE_FREERTOS OFF CACHE BOOL "Enable FreeRTOS support")
-
 if(U2HTS_ENABLE_FREERTOS)
     include(${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
     add_library(freertos INTERFACE)
@@ -52,28 +50,13 @@ if(U2HTS_ENABLE_FREERTOS)
         # U2HTS_ENABLE_PERSISTENT_CONFIG requires this
         PICO_FLASH_ASSUME_CORE1_SAFE
     )
-    target_link_libraries(u2hts_core_config INTERFACE freertos)
+    target_link_libraries(u2hts_core PUBLIC freertos)
 
     set(TINYUSB_OPT_OS OPT_OS_FREERTOS)
 endif()
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
-
-# Default hid report descriptor contains 10 touch points
-# Below is an example of how to override it with 5 touch points.
-
-# set(U2HTS_MAX_TPS 5)
-# u2hts_generate_hid_report_descriptor()
-
-target_compile_definitions(u2hts_core_config INTERFACE
-    U2HTS_LOG_LEVEL=U2HTS_LOG_LEVEL_INFO
-    U2HTS_ENABLE_LED
-    # U2HTS_ENABLE_PERSISTENT_CONFIG
-    # U2HTS_ENABLE_KEY
-    U2HTS_CONFIG_TIMEOUT=5000
-    # U2HTS_ENABLE_COMPACT_REPORT
-)
 
 set(TOUCH_CONTROLLERS
     ${CMAKE_CURRENT_LIST_DIR}/u2hts_touch_controllers/gt9xx.c
