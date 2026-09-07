@@ -263,9 +263,15 @@ inline uint16_t const* tud_descriptor_string_cb(uint8_t index,
   return _desc_str;
 }
 
-inline void tud_mount_cb(void) { U2HTS_LOG_DEBUG("device mounted"); }
+inline void tud_mount_cb(void) {
+  U2HTS_LOG_DEBUG("device mounted");
+  u2hts_usb_status = true;
+}
 
-inline void tud_umount_cb(void) { U2HTS_LOG_DEBUG("device unmounted"); }
+inline void tud_umount_cb(void) {
+  U2HTS_LOG_DEBUG("device unmounted");
+  u2hts_usb_status = false;
+}
 
 inline void tud_suspend_cb(bool remote_wakeup_en) {
   U2HTS_LOG_DEBUG("device suspended, rmt_wakeup_en = %d", remote_wakeup_en);
@@ -293,16 +299,20 @@ inline uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
     switch (report_id) {
       case U2HTS_HID_REPORT_TP_MAX_COUNT_ID:
         buffer[0] = u2hts_get_max_tps();
-        break;
-      case U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID:
-        memcpy(buffer, u2hts_ms_thqa_cert, reqlen);
         u2hts_usb_status = true;
-        break;
+        return 1;
+      case U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID: {
+        uint16_t cert_len = sizeof(u2hts_ms_thqa_cert);
+        if (reqlen < cert_len) cert_len = reqlen;
+        memcpy(buffer, u2hts_ms_thqa_cert, cert_len);
+        u2hts_usb_status = true;
+        return cert_len;
+      }
       default:
         return 0;
     }
   }
-  return reqlen;
+  return 0;
 }
 
 inline void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report,
