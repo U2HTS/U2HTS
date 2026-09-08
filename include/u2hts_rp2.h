@@ -1,8 +1,7 @@
 /*
-  Copyright (C) CNflysky.
+  Copyright (C) U2HTS Developers. All rights reserved..
   U2HTS stands for "USB to HID TouchScreen".
   This file is licensed under GPL V3.
-  All rights reserved.
 */
 
 #ifndef _U2HTS_RP2_H_

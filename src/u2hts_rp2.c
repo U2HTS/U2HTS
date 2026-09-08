@@ -1,8 +1,7 @@
 /*
-  Copyright (C) CNflysky.
+  Copyright (C) U2HTS Developers. All rights reserved..
   U2HTS stands for "USB to HID TouchScreen".
   This file is licensed under GPL V3.
-  All rights reserved.
 */
 
 #include "u2hts_rp2.h"
@@ -102,7 +101,7 @@ inline void u2hts_tpint_set_mode(bool mode, bool pull) {
 inline bool u2hts_tpint_get() { return gpio_get(U2HTS_TP_INT); }
 
 static uint32_t real_irq_type = 0x00;
-static bool u2hts_usb_status = false;
+// static bool u2hts_usb_status = false;
 
 static const tusb_desc_device_t u2hts_device_desc = {
     .bLength = sizeof(u2hts_device_desc),
@@ -265,12 +264,10 @@ inline uint16_t const* tud_descriptor_string_cb(uint8_t index,
 
 inline void tud_mount_cb(void) {
   U2HTS_LOG_DEBUG("device mounted");
-  u2hts_usb_status = true;
 }
 
 inline void tud_umount_cb(void) {
   U2HTS_LOG_DEBUG("device unmounted");
-  u2hts_usb_status = false;
 }
 
 inline void tud_suspend_cb(bool remote_wakeup_en) {
@@ -299,13 +296,11 @@ inline uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
     switch (report_id) {
       case U2HTS_HID_REPORT_TP_MAX_COUNT_ID:
         buffer[0] = u2hts_get_max_tps();
-        u2hts_usb_status = true;
         return 1;
       case U2HTS_HID_REPORT_TP_MS_THQA_CERT_ID: {
         uint16_t cert_len = sizeof(u2hts_ms_thqa_cert);
         if (reqlen < cert_len) cert_len = reqlen;
         memcpy(buffer, u2hts_ms_thqa_cert, cert_len);
-        u2hts_usb_status = true;
         return cert_len;
       }
       default:
@@ -318,7 +313,6 @@ inline uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
 inline void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report,
                                        uint16_t len) {
   U2HTS_LOG_DEBUG("Enter %s", __func__);
-  u2hts_usb_status = true;
 }
 
 inline void u2hts_ts_irq_set(bool enable) {
@@ -358,7 +352,6 @@ inline void u2hts_usb_report(const u2hts_hid_report* report) {
   static_assert(sizeof(u2hts_hid_report) < CFG_TUD_HID_EP_BUFSIZE,
                 "u2hts_hid_report is oversized!");
   tud_hid_report(0, report, sizeof(u2hts_hid_report));
-  u2hts_usb_status = false;
 }
 
-inline bool u2hts_get_usb_status() { return u2hts_usb_status; }
+inline bool u2hts_get_usb_status() { return tud_hid_ready(); }
