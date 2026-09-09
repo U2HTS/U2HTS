@@ -315,15 +315,15 @@ inline void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report,
   U2HTS_LOG_DEBUG("Enter %s", __func__);
 }
 
-inline void u2hts_ts_irq_set(bool enable) {
+inline void u2hts_irq_set(bool enable) {
   gpio_set_irq_enabled(U2HTS_TP_INT, real_irq_type, enable);
 }
 
 inline static void u2hts_rp2_irq_cb(uint gpio, uint32_t event_mask) {
-  u2hts_ts_irq_status_set(gpio == U2HTS_TP_INT && (event_mask & real_irq_type));
+  if(gpio == U2HTS_TP_INT && (event_mask & real_irq_type)) u2hts_irq_handler();
 }
 
-inline void u2hts_ts_irq_init(U2HTS_IRQ_TYPES irq_type) {
+inline void u2hts_irq_init(U2HTS_IRQ_TYPES irq_type) {
   gpio_deinit(U2HTS_TP_INT);
   switch (irq_type) {
     case IRQ_TYPE_LEVEL_LOW:
@@ -348,7 +348,7 @@ inline void u2hts_ts_irq_init(U2HTS_IRQ_TYPES irq_type) {
                                      u2hts_rp2_irq_cb);
 }
 
-inline void u2hts_usb_report(const u2hts_hid_report* report) {
+inline void u2hts_usb_hid_report(const u2hts_hid_report* report) {
   static_assert(sizeof(u2hts_hid_report) < CFG_TUD_HID_EP_BUFSIZE,
                 "u2hts_hid_report is oversized!");
   tud_hid_report(0, report, sizeof(u2hts_hid_report));
