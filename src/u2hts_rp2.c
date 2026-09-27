@@ -1,5 +1,5 @@
 /*
-  Copyright (C) U2HTS Developers. All rights reserved..
+  Copyright (C) U2HTS Developers. All rights reserved.
   U2HTS stands for "USB to HID TouchScreen".
   This file is licensed under GPL V3.
 */
@@ -9,18 +9,18 @@
 #include "u2hts_core.h"
 #include "u2hts_hid_report_descriptor.h"
 
-inline bool u2hts_i2c_write(uint8_t slave_addr, void* buf, size_t len,
+bool u2hts_i2c_write(uint8_t slave_addr, void* buf, size_t len,
                             bool stop) {
   return (i2c_write_timeout_us(U2HTS_I2C, slave_addr, (uint8_t*)buf, len, !stop,
                                U2HTS_I2C_TIMEOUT) == len);
 }
 
-inline bool u2hts_i2c_read(uint8_t slave_addr, void* buf, size_t len) {
+bool u2hts_i2c_read(uint8_t slave_addr, void* buf, size_t len) {
   return (i2c_read_timeout_us(U2HTS_I2C, slave_addr, (uint8_t*)buf, len, false,
                               U2HTS_I2C_TIMEOUT) == len);
 }
 
-inline void u2hts_i2c_init(uint32_t speed_hz) {
+void u2hts_i2c_init(uint32_t speed_hz) {
   gpio_set_function(U2HTS_I2C_SCL, GPIO_FUNC_I2C);
   gpio_set_function(U2HTS_I2C_SDA, GPIO_FUNC_I2C);
   gpio_pull_up(U2HTS_I2C_SDA);
@@ -30,37 +30,37 @@ inline void u2hts_i2c_init(uint32_t speed_hz) {
 }
 
 // not implemented
-inline void u2hts_spi_init(u2hts_spi_config* config) {}
+void u2hts_spi_init(u2hts_spi_config* config) {}
 
-inline bool u2hts_spi_transfer(void* buf, size_t len) { return false; }
+bool u2hts_spi_transfer(void* buf, size_t len) { return false; }
 
-inline void u2hts_tpint_set(bool value) { gpio_put(U2HTS_TP_INT, value); }
+void u2hts_tpint_set(bool value) { gpio_put(U2HTS_TP_INT, value); }
 
-inline bool u2hts_i2c_detect_slave(uint8_t addr) {
+bool u2hts_i2c_detect_slave(uint8_t addr) {
   uint8_t rx = 0;
   return i2c_read_timeout_us(U2HTS_I2C, addr, &rx, sizeof(rx), false,
                              U2HTS_I2C_TIMEOUT) >= 0;
 }
 
-inline void u2hts_tprst_set(bool value) { gpio_put(U2HTS_TP_RST, value); }
+void u2hts_tprst_set(bool value) { gpio_put(U2HTS_TP_RST, value); }
 
-inline void u2hts_i2c_set_speed(uint32_t speed_hz) {
+void u2hts_i2c_set_speed(uint32_t speed_hz) {
   i2c_set_baudrate(U2HTS_I2C, speed_hz);
 }
 
 #ifndef U2HTS_ENABLE_FREERTOS
-inline void u2hts_delay_ms(uint32_t ms) { sleep_ms(ms); }
-inline uint16_t u2hts_get_timestamp() {
+void u2hts_delay_ms(uint32_t ms) { sleep_ms(ms); }
+uint16_t u2hts_get_timestamp() {
   return (uint16_t)(to_us_since_boot(time_us_64()) / 100);
 }
 #endif
 
-inline void u2hts_delay_us(uint32_t us) { sleep_us(us); }
+void u2hts_delay_us(uint32_t us) { sleep_us(us); }
 
-inline void u2hts_usb_init() { tud_init(BOARD_TUD_RHPORT); }
+void u2hts_usb_init() { tud_init(BOARD_TUD_RHPORT); }
 
 #ifdef U2HTS_ENABLE_LED
-inline void u2hts_led_set(bool on) { gpio_put(PICO_DEFAULT_LED_PIN, on); }
+void u2hts_led_set(bool on) { gpio_put(PICO_DEFAULT_LED_PIN, on); }
 #endif
 
 #ifdef U2HTS_ENABLE_PERSISTENT_CONFIG
@@ -77,28 +77,28 @@ static void u2hts_rp2_flash_write(void* param) {
                       FLASH_PAGE_SIZE);
 }
 
-inline void u2hts_write_config(uint16_t cfg) {
+void u2hts_write_config(uint16_t cfg) {
   flash_safe_execute(u2hts_rp2_flash_erase, NULL, 0xFFFF);
   flash_safe_execute(u2hts_rp2_flash_write, &cfg, 0xFFFF);
 }
 
-inline uint16_t u2hts_read_config() {
+uint16_t u2hts_read_config() {
   return *(uint16_t*)(XIP_BASE + U2HTS_CONFIG_STORAGE_OFFSET);
 }
 #endif
 
 #ifdef U2HTS_ENABLE_KEY
-inline bool u2hts_usrkey_get() { return gpio_get(U2HTS_USR_KEY); }
+bool u2hts_usrkey_get() { return gpio_get(U2HTS_USR_KEY); }
 #endif
 
-inline void u2hts_tpint_set_mode(bool mode, bool pull) {
+void u2hts_tpint_set_mode(bool mode, bool pull) {
   gpio_deinit(U2HTS_TP_INT);
   gpio_set_function(U2HTS_TP_INT, GPIO_FUNC_SIO);
   gpio_set_dir(U2HTS_TP_INT, mode);
   pull ? gpio_pull_up(U2HTS_TP_INT) : gpio_pull_down(U2HTS_TP_INT);
 }
 
-inline bool u2hts_tpint_get() { return gpio_get(U2HTS_TP_INT); }
+bool u2hts_tpint_get() { return gpio_get(U2HTS_TP_INT); }
 
 static uint32_t real_irq_type = 0x00;
 // static bool u2hts_usb_status = false;
@@ -204,22 +204,22 @@ static uint8_t const* string_desc_arr[] = {
     NULL,  // 3: Serials will use unique ID if possible
 };
 
-inline uint8_t const* tud_descriptor_device_cb(void) {
+uint8_t const* tud_descriptor_device_cb(void) {
   return (uint8_t const*)&u2hts_device_desc;
 }
 
-inline uint8_t const* tud_hid_descriptor_report_cb(uint8_t instance) {
+uint8_t const* tud_hid_descriptor_report_cb(uint8_t instance) {
   return (uint8_t const*)u2hts_hid_report_desc;
 }
 
-inline uint8_t const* tud_descriptor_configuration_cb(uint8_t index) {
+uint8_t const* tud_descriptor_configuration_cb(uint8_t index) {
   return (uint8_t const*)u2hts_config_desc;
 }
 
 // Invoked when received GET STRING DESCRIPTOR request
 // Application return pointer to descriptor, whose contents must exist long
 // enough for transfer to complete
-inline uint16_t const* tud_descriptor_string_cb(uint8_t index,
+uint16_t const* tud_descriptor_string_cb(uint8_t index,
                                                 uint16_t langid) {
   (void)langid;
   size_t chr_count;
@@ -262,21 +262,21 @@ inline uint16_t const* tud_descriptor_string_cb(uint8_t index,
   return _desc_str;
 }
 
-inline void tud_mount_cb(void) {
+void tud_mount_cb(void) {
   U2HTS_LOG_DEBUG("device mounted");
 }
 
-inline void tud_umount_cb(void) {
+void tud_umount_cb(void) {
   U2HTS_LOG_DEBUG("device unmounted");
 }
 
-inline void tud_suspend_cb(bool remote_wakeup_en) {
+void tud_suspend_cb(bool remote_wakeup_en) {
   U2HTS_LOG_DEBUG("device suspended, rmt_wakeup_en = %d", remote_wakeup_en);
 }
 
-inline void tud_resume_cb(void) { U2HTS_LOG_DEBUG("device resumed"); }
+void tud_resume_cb(void) { U2HTS_LOG_DEBUG("device resumed"); }
 
-inline void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id,
+void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id,
                                   hid_report_type_t report_type,
                                   uint8_t const* buffer, uint16_t bufsize) {
   U2HTS_LOG_DEBUG(
@@ -285,7 +285,7 @@ inline void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id,
       instance, report_id, report_type, bufsize);
 }
 
-inline uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
+uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
                                       hid_report_type_t report_type,
                                       uint8_t* buffer, uint16_t reqlen) {
   U2HTS_LOG_DEBUG(
@@ -310,20 +310,20 @@ inline uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
   return 0;
 }
 
-inline void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report,
+void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report,
                                        uint16_t len) {
   U2HTS_LOG_DEBUG("Enter %s", __func__);
 }
 
-inline void u2hts_irq_set(bool enable) {
+void u2hts_irq_set(bool enable) {
   gpio_set_irq_enabled(U2HTS_TP_INT, real_irq_type, enable);
 }
 
-inline static void u2hts_rp2_irq_cb(uint gpio, uint32_t event_mask) {
+static void u2hts_rp2_irq_cb(uint gpio, uint32_t event_mask) {
   if(gpio == U2HTS_TP_INT && (event_mask & real_irq_type)) u2hts_irq_handler();
 }
 
-inline void u2hts_irq_init(U2HTS_IRQ_TYPES irq_type) {
+void u2hts_irq_init(U2HTS_IRQ_TYPES irq_type) {
   gpio_deinit(U2HTS_TP_INT);
   switch (irq_type) {
     case IRQ_TYPE_LEVEL_LOW:
@@ -348,10 +348,10 @@ inline void u2hts_irq_init(U2HTS_IRQ_TYPES irq_type) {
                                      u2hts_rp2_irq_cb);
 }
 
-inline void u2hts_usb_hid_report(const u2hts_hid_report* report) {
+void u2hts_usb_hid_report(const u2hts_hid_report* report) {
   static_assert(sizeof(u2hts_hid_report) < CFG_TUD_HID_EP_BUFSIZE,
                 "u2hts_hid_report is oversized!");
   tud_hid_report(0, report, sizeof(u2hts_hid_report));
 }
 
-inline bool u2hts_get_usb_status() { return tud_hid_ready(); }
+bool u2hts_get_usb_status() { return tud_hid_ready(); }
