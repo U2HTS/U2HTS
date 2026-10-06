@@ -139,13 +139,13 @@ picotool load -f build/U2HTS.uf2
 sudo apt install gcc-arm-none-eabi libnewlib-dev libnewlib-arm-none-eabi ninja-build cmake
 git clone https://github.com/U2HTS/U2HTS.git --recursive --depth 1
 cd U2HTS
-PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.3.0 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel
+PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.3.1 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel
 cmake --build build
 ```
 
 # RP2 FreeRTOS
 *注意：RP2 FreeRTOS支持目前处于实验性状态。*
 ```bash
-PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.3.0 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DU2HTS_ENABLE_FREERTOS=ON
+PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.3.1 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DU2HTS_ENABLE_FREERTOS=ON
 cmake --build build
 ```

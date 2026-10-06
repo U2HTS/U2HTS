@@ -22,16 +22,12 @@
 
 #ifdef U2HTS_ENABLE_FREERTOS
 
-#define U2HTS_BRINGUP_TASK_STACK_SIZE 256
+#define TUSB_TASK_STACK_SIZE 256
 
-static StackType_t u2hts_bringup_task_stack[U2HTS_BRINGUP_TASK_STACK_SIZE] = {
-    0};
-static StaticTask_t u2hts_bringup_task_tcb = {0};
+static StackType_t tusb_task_stack[TUSB_TASK_STACK_SIZE] = {0};
+static StaticTask_t tusb_task_tcb = {0};
 
-static void u2hts_bringup_task(void* pvParameters) {
-  U2HTS_ERROR_CODES ret = u2hts_init((u2hts_config*)pvParameters);
-  if (ret)
-    while (1) u2hts_led_show_error_code(ret);
+static void tusb_task(void* pvParameters) {
   while (1) tud_task();
 }
 #endif
@@ -152,17 +148,14 @@ int main() {
                       .irq_type = irq_type,
                       .polling_mode = polling_mode,
                       .custom_controller_config = custom_controller_config};
-#ifdef U2HTS_ENABLE_FREERTOS
-  xTaskCreateStatic(u2hts_bringup_task, "u2hts_bringup_task",
-                    U2HTS_BRINGUP_TASK_STACK_SIZE, (void*)&cfg,
-                    U2HTS_TOUCH_TASK_PRIORITY + 1, u2hts_bringup_task_stack,
-                    &u2hts_bringup_task_tcb);
-  vTaskStartScheduler();
-#else
-
   U2HTS_ERROR_CODES ret = u2hts_init(&cfg);
   if (ret)
     while (1) u2hts_led_show_error_code(ret);
+#ifdef U2HTS_ENABLE_FREERTOS
+  xTaskCreateStatic(tusb_task, "tusb task", TUSB_TASK_STACK_SIZE, (void*)&cfg,
+                    configMAX_PRIORITIES - 1, tusb_task_stack, &tusb_task_tcb);
+  vTaskStartScheduler();
+#else
   while (1) {
     tud_task();
     u2hts_task();
