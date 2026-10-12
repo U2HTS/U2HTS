@@ -100,9 +100,9 @@ int main() {
                        0));
   bi_decl(bi_program_feature_group(
       U2HTS_BI_INFO_MISC_CONFIG, U2HTS_BI_INFO_MISC_ID, "Misc Configuration"));
-  // IRQ flag
+  // INT flag
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_MISC_CONFIG, U2HTS_BI_INFO_MISC_ID,
-                       irq_type, 0));
+                       int_flag, 0));
   // Report delay
   bi_decl(bi_ptr_int32(U2HTS_BI_INFO_MISC_CONFIG, U2HTS_BI_INFO_MISC_ID,
                        report_delay, 0));
@@ -145,7 +145,7 @@ int main() {
                               .x_offset = x_offset,
                               .y_offset = y_offset,
                           },
-                      .irq_type = irq_type,
+                      .int_flag = int_flag,
                       .polling_mode = polling_mode,
                       .custom_controller_config = custom_controller_config};
   U2HTS_ERROR_CODES ret = u2hts_init(&cfg);

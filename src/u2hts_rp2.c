@@ -311,30 +311,30 @@ void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report,
   U2HTS_LOG_DEBUG("Enter %s", __func__);
 }
 
-void u2hts_irq_set(bool enable) {
+void u2hts_int_set(bool enable) {
   gpio_set_irq_enabled(U2HTS_TP_INT, real_irq_type, enable);
 }
 
 static void u2hts_rp2_irq_cb(uint gpio, uint32_t event_mask) {
-  if (gpio == U2HTS_TP_INT && (event_mask & real_irq_type)) u2hts_irq_handler();
+  if (gpio == U2HTS_TP_INT && (event_mask & real_irq_type)) u2hts_int_handler();
 }
 
-void u2hts_irq_init(U2HTS_IRQ_TYPES irq_type) {
+void u2hts_int_init(U2HTS_INT_FLAGS irq_type) {
   gpio_deinit(U2HTS_TP_INT);
   switch (irq_type) {
-    case IRQ_TYPE_LEVEL_LOW:
+    case INT_FLAG_LEVEL_LOW:
       real_irq_type = GPIO_IRQ_LEVEL_LOW;
       gpio_pull_up(U2HTS_TP_INT);
       break;
-    case IRQ_TYPE_LEVEL_HIGH:
+    case INT_FLAG_LEVEL_HIGH:
       real_irq_type = GPIO_IRQ_LEVEL_HIGH;
       gpio_pull_down(U2HTS_TP_INT);
       break;
-    case IRQ_TYPE_EDGE_RISING:
+    case INT_FLAG_EDGE_RISING:
       real_irq_type = GPIO_IRQ_EDGE_RISE;
       gpio_pull_down(U2HTS_TP_INT);
       break;
-    case IRQ_TYPE_EDGE_FALLING:
+    case INT_FLAG_EDGE_FALLING:
     default:
       real_irq_type = GPIO_IRQ_EDGE_FALL;
       gpio_pull_up(U2HTS_TP_INT);

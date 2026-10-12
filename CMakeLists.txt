@@ -34,23 +34,22 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/u2hts_core)
 
 if(U2HTS_ENABLE_FREERTOS)
     include(${CMAKE_CURRENT_LIST_DIR}/FreeRTOS-Kernel/portable/ThirdParty/GCC/RP2040/FreeRTOS_Kernel_import.cmake)
-    add_library(freertos INTERFACE)
-    target_include_directories(freertos INTERFACE 
+    add_library(freertos_kernel INTERFACE)
+    target_include_directories(freertos_kernel INTERFACE 
         # FreeRTOSConfig.h location
         ${CMAKE_CURRENT_LIST_DIR}/include
     )
 
-    target_link_libraries(freertos INTERFACE 
+    target_link_libraries(freertos_kernel INTERFACE 
         pico_async_context_freertos
         FreeRTOS-Kernel-Static
     )
 
-    target_compile_definitions(freertos INTERFACE
+    target_compile_definitions(freertos_kernel INTERFACE
         U2HTS_ENABLE_FREERTOS
         # U2HTS_ENABLE_PERSISTENT_CONFIG requires this
         PICO_FLASH_ASSUME_CORE1_SAFE
     )
-    target_link_libraries(u2hts_core PUBLIC freertos)
 
     set(TINYUSB_OPT_OS OPT_OS_FREERTOS)
 endif()
