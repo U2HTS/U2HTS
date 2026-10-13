@@ -51,19 +51,19 @@ After a idle time (~5s) system will apply new config (and save to flash if `U2HT
 | Invert X axis | `x_invert` | 0/1 |
 | Invert Y axis | `y_invert` | 0/1 |
 | Swap X&Y axis | `x_y_swap` | 0/1 |
-| X coordinate offset | `x_offset` | -32768-32767 |
-| Y coordinate offset | `y_offset` | -32768-32767 |
+| X coordinate offset | `x_offset` | int16_t |
+| Y coordinate offset | `y_offset` | int16_t |
 | Polling mode | `polling_mode` | 0/1 |
 | Report delay | `report_delay` | uint32_t, default 0 |
-| Interrupt trigger type | `irq_type` | refer [u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h) |
-| Custom Controller Configuration | `custom_controller_config` | string, max length is 512 by default |
+| Interrupt flag | `int_flag` | refer [u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h) |
+| Custom Controller Configuration | `custom_controller_config` | string, max 512 bytes |
  
 These values must be configured when using an controller that does NOT support read config:
-| Config | Name | Value |
+| Config | Name | Max |
 | --- | --- | --- |
-| Max touch points | `max_tps` | up to 10 |
-| X axis max | `x_max` | 65535 |
-| Y axis max | `y_max` | 65535 |
+| Max touch points | `max_tps` | 10 |
+| X axis max | `x_max` | 4095 |
+| Y axis max | `y_max` | 4095 |
 
 Drivers will set the default values of bus configuration, but you can also override them(**Note: Once override enabled then all config entrys in corrsponding bus config must be configured**):
 | Config | Name | Value |
@@ -120,8 +120,7 @@ See [dummy_test.c](https://github.com/U2HTS/u2hts_touch_controllers/blob/main/du
 No external pull-up/pull-down resistors are required.  
 
 # RP2 Config
-Touchscreen config can be easily changed using `picotool` without rebuild of firmware on RP2 platforms.
-Example：
+Touchscreen config can be easily changed via `picotool` without rebuild of firmware on RP2 platforms.  
 ```bash
 picotool config -s x_invert 1 build/U2HTS.uf2
 picotool load -f build/U2HTS.uf2
@@ -129,11 +128,11 @@ picotool load -f build/U2HTS.uf2
 
 # RP2 Build
 ## VSCode Extension
-Install `VS code` and `Raspberry Pi Pico` extension, import this repository, then build.
+Install `VS code` and `Raspberry Pi Pico` extension, import this repository, build.
 ## GitHub action
-Fork this repository to your account.  
-Click `Actions` page, click `enable workflow`.  
-Click `Build firmware` on the left，click `Run workflow`.  
+Fork this repository.  
+`Actions` -> `enable workflow`.  
+Left `Build firmware` -> `Run workflow`.  
 Wait until build complete and grab the artifacts.  
 ## Manual
 ```bash
@@ -144,7 +143,6 @@ PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.3.1 cmake -B build -G Ni
 cmake --build build
 ```
 # RP2 FreeRTOS
-*Note：RP2 FreeRTOS support is experimental.*
 ```bash
 PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.3.1 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DU2HTS_ENABLE_FREERTOS=ON
 cmake --build build

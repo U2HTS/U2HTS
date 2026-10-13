@@ -49,20 +49,20 @@
 | 总线类型 | `bus_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h), 默认为`UB_I2C` |
 | 反转X轴 | `x_invert` | 0/1 |
 | 反转Y轴 | `y_invert` | 0/1 |
-| X轴偏移量 | `x_offset` | -32768-32767 |
-| Y轴偏移量 | `y_offset` | -32768-32767 |
+| X轴偏移量 | `x_offset` | int16_t |
+| Y轴偏移量 | `y_offset` | int16_t |
 | 交换XY轴 | `x_y_swap` | 0/1 |
 | 轮询模式 | `polling_mode` | 0/1 |
 | 回报延时 | `report_delay` | uint32_t, 默认为0 |
-| 中断触发类型 | `irq_type` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h) |
-| 自定义控制器配置 | `custom_controller_config` | 字符串, 默认最大512字节 |
+| 中断标志 | `int_flag` | 参考[u2hts_core.h](https://github.com/U2HTS/u2hts_core/blob/main/u2hts_core.h) |
+| 自定义控制器配置 | `custom_controller_config` | 字符串, 最多512字节 |
 
 如果控制器不支持读取配置，则必须配置以下参数：
-| 配置 | 变量名 | 可选值 |
+| 配置 | 变量名 | 最大值 |
 | --- | --- | --- |
-| 最大触摸点数 | `max_tps` | 最大为10 |
-| X轴最大值 | `x_max` | 65535 |
-| Y轴最大值 | `y_max` | 65535 |
+| 最大触摸点数 | `max_tps` | 10 |
+| X轴最大值 | `x_max` | 4095 |
+| Y轴最大值 | `y_max` | 4095 |
 
 通常控制器驱动会设置总线的默认参数，也可以将其覆盖(**注意：如启用覆盖则对应总线所有配置项均需要配置**): 
 | 配置 | 变量名 | 可选值 |
@@ -120,15 +120,14 @@
 
 # RP2 配置
 RP2支持通过`Picotool`工具来修改触摸屏相关设置，不需要重新生成固件。  
-示例：
 ```bash
 picotool config -s x_invert 1 build/U2HTS.uf2
 picotool load -f build/U2HTS.uf2
 ```
 
 # RP2 构建
-## VSCode插件
-安装`VS code`和`Raspberry Pi Pico`插件, 导入项目后构建即可。  
+## VSCode 扩展
+安装`VS code`和`Raspberry Pi Pico`扩展, 导入项目后构建即可。  
 ## 借助GitHub actions构建
 点击`fork`按钮，将本仓库fork到你的账号下。  
 点击`Actions`标签页，点击`Enable workflow`。  
@@ -144,7 +143,6 @@ cmake --build build
 ```
 
 # RP2 FreeRTOS
-*注意：RP2 FreeRTOS支持目前处于实验性状态。*
 ```bash
 PICO_SDK_FETCH_FROM_GIT=1 PICO_SDK_FETCH_FROM_GIT_TAG=2.3.1 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel -DU2HTS_ENABLE_FREERTOS=ON
 cmake --build build
