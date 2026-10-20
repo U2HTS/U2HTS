@@ -9,6 +9,8 @@
 #include "u2hts_core.h"
 #include "u2hts_hid_report_descriptor.h"
 
+#define LOG_TAG "u2hts_rp2"
+
 bool u2hts_i2c_write(uint8_t slave_addr, void* buf, size_t len, bool stop) {
   return (i2c_write_timeout_us(U2HTS_I2C, slave_addr, (uint8_t*)buf, len, !stop,
                                U2HTS_I2C_TIMEOUT) == len);
@@ -262,20 +264,21 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
   return _desc_str;
 }
 
-void tud_mount_cb(void) { U2HTS_LOG_DEBUG("device mounted"); }
+void tud_mount_cb(void) { ULOGD(LOG_TAG, "device mounted"); }
 
-void tud_umount_cb(void) { U2HTS_LOG_DEBUG("device unmounted"); }
+void tud_umount_cb(void) { ULOGD(LOG_TAG, "device unmounted"); }
 
 void tud_suspend_cb(bool remote_wakeup_en) {
-  U2HTS_LOG_DEBUG("device suspended, rmt_wakeup_en = %d", remote_wakeup_en);
+  ULOGD(LOG_TAG, "device suspended, rmt_wakeup_en = %d", remote_wakeup_en);
 }
 
-void tud_resume_cb(void) { U2HTS_LOG_DEBUG("device resumed"); }
+void tud_resume_cb(void) { ULOGD(LOG_TAG, "device resumed"); }
 
 void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id,
                            hid_report_type_t report_type, uint8_t const* buffer,
                            uint16_t bufsize) {
-  U2HTS_LOG_DEBUG(
+  ULOGD(
+      LOG_TAG,
       "Got hid set report request: instance = %d, report_id = %d, report_type "
       "= %d, bufsize = %d",
       instance, report_id, report_type, bufsize);
@@ -284,7 +287,8 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id,
 uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
                                hid_report_type_t report_type, uint8_t* buffer,
                                uint16_t reqlen) {
-  U2HTS_LOG_DEBUG(
+  ULOGD(
+      LOG_TAG,
       "Got hid get report request: instance = %d, report_id = %d, report_type "
       "= %d, reqlen = %d",
       instance, report_id, report_type, reqlen);
@@ -308,7 +312,7 @@ uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id,
 
 void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report,
                                 uint16_t len) {
-  U2HTS_LOG_DEBUG("Enter %s", __func__);
+  ULOGD(LOG_TAG, "Enter %s", __func__);
 }
 
 void u2hts_int_set(bool enable) {
